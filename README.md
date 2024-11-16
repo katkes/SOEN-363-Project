@@ -13,6 +13,12 @@ Comparing and contrasting analytics with Montréal, Toronto and New York City's 
 
 This project fetches data from the STM (Montréal public transit), TTC (Toronto pubic transit), and MTA (New York City public transit) API and stores it. The data includes service status messages, route information and  and trip updates. The fetched data is saved as JSON files for further analysis or usage.
 
+## APIs used
+- [STM](https://www.stm.info/en/about/developers)
+- [Ville de Montreal](https://donnees.montreal.ca/dataset/?q=&sort=views_recent+desc&organization=societe-de-transport-de-montreal)
+- [TTC](https://myttc.ca/developers)
+- [MTA](https://new.mta.info/developers)
+
 ## Features
 - Fetches service status messages and trip updates from the STM API.
 - Parses Protobuf data from the STM API trip updates and converts it to JSON.
