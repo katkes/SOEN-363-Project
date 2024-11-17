@@ -31,6 +31,15 @@ CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
     FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
 );
 
+CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometrage (
+    stm_metro_realized_kilometrage_id INT PRIMARY KEY,
+    stm_metro_line_id INT,
+    realized_kilometerage INT,
+    day_of_week VARCHAR(25),
+    stm_metro_realized_kilometrage_date DATE,
+    FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
+);
+
 CREATE TABLE IF NOT EXISTS stm_incident(
     stm_incident_id INT PRIMARY KEY,
     stm_incident_type VARCHAR(255),
