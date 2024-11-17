@@ -14,10 +14,12 @@ connection = psycopg2.connect(
 )
 cursor = connection.cursor()
 
-# stmHeaders = {
-#     "accept": "application/json",
-#     "apiKey": "l78e91cc66e0c54b5cbddbf53eefc45120"
-# }
+stmHeaders = {
+    "accept": "application/json",
+    "apiKey": "l78e91cc66e0c54b5cbddbf53eefc45120"
+}
+
+
 
 # # Fetch and save response for version 1
 # serviceStatusApiUrlV1 = "https://api.stm.info/pub/od/i3/v1/messages/etatservice"
@@ -30,16 +32,20 @@ cursor = connection.cursor()
 # else:
 #     print(f"Error: Received status code {stmServiceStatusResponseV1.status_code} for URL {serviceStatusApiUrlV1}")
 
-# # Fetch and save response for version 2
-# serviceStatusApiUrlV2 = "https://api.stm.info/pub/od/i3/v2/messages/etatservice"
-# stmServiceStatusResponseV2 = requests.get(serviceStatusApiUrlV2, headers=stmHeaders)
-# if stmServiceStatusResponseV2.status_code == 200:
-#     stmResponseV2 = stmServiceStatusResponseV2.json()
-#     with open('stm_response_v2.json', 'w') as json_file:
-#         json.dump(stmResponseV2, json_file, indent=4)
-#         print("Json response has been written to stm_response_v2.json")
-# else:
-#     print(f"Error: Received status code {stmServiceStatusResponseV2.status_code} for URL {serviceStatusApiUrlV2}")
+# Fetch and save response for version 2
+serviceStatusApiUrlV2 = "https://api.stm.info/pub/od/i3/v2/messages/etatservice"
+stmServiceStatusResponseV2 = requests.get(serviceStatusApiUrlV2, headers=stmHeaders)
+
+for record in stmServiceStatusResponseV2.json():
+    print(record)
+
+if stmServiceStatusResponseV2.status_code == 200:
+    stmResponseV2 = stmServiceStatusResponseV2.json()
+    with open('stm_response_v2.json', 'w') as json_file:
+        json.dump(stmResponseV2, json_file, indent=4)
+        print("Json response has been written to stm_response_v2.json")
+else:
+    print(f"Error: Received status code {stmServiceStatusResponseV2.status_code} for URL {serviceStatusApiUrlV2}")
 
 # stmMetroNumbers = {1: "Green", 2: "Orange", 4: "Yellow", 5: "Blue"}
 

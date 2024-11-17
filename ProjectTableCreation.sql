@@ -1,6 +1,12 @@
+CREATE DOMAIN planned_kilometerage AS INT CHECK (VALUE >= 0);
+CREATE DOMAIN realized_kilometerage AS INT CHECK (VALUE >= 0);
+
+CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+CREATE TYPE metro_colour AS ENUM ('Grean', 'Orange', 'Yellow', 'Blue');
+
 CREATE TABLE IF NOT EXISTS stm_metro_line(
     stm_metro_line_id INT PRIMARY KEY,
-    line_name VARCHAR(255),
+    line_colour metro_colour,
     line_number INT
 );
 
@@ -16,6 +22,17 @@ CREATE TABLE IF NOT EXISTS stm_bus_stop(
     stm_bus_stop_code INT
 );
 
+CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
+    stm_bus_stop_cancelled_moved_relocated_id INT,
+    stm_bus_stop_id VARCHAR(15),
+    stm_bus_stop_name VARCHAR(255),
+    stm_bus_stop_code INT,
+    stm_bus_stop_cancelled_moved_relocated_date DATE,
+    stm_bus_stop_cancelled_moved_relocated_reason VARCHAR(255),
+    PRIMARY KEY (stm_bus_stop_id, stm_bus_stop_cancelled_moved_relocated_date),
+    FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
+)
+
 CREATE TABLE IF NOT EXISTS stm_metro_stop(
     stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
     stm_metro_stop_name VARCHAR(255),
@@ -26,7 +43,7 @@ CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
     stm_metro_planned_kilometerage_id INT PRIMARY KEY,
     stm_metro_line_id INT,
     planned_kilometerage INT,
-    day_of_week VARCHAR(25),
+    day_of_week day_of_week,
     stm_metro_planned_kilometerage_date DATE,
     FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
 );
@@ -35,7 +52,7 @@ CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometrage (
     stm_metro_realized_kilometrage_id INT PRIMARY KEY,
     stm_metro_line_id INT,
     realized_kilometerage INT,
-    day_of_week VARCHAR(25),
+    day_of_week_or_type_of_day VARCHAR(25),
     stm_metro_realized_kilometrage_date DATE,
     FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
 );
@@ -52,3 +69,9 @@ CREATE TABLE IF NOT EXISTS stm_incident(
     stm_metro_line_id INT,
     FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
 );
+
+-- View for a low key access to the stm_incident table, only showing incidents from the last year
+CREATE VIEW low_key_access_stm_incident AS
+SELECT stm_incident_id, stm_incident_type, stm_incident_date_of_incident, stm_incident_location_of_incident
+FROM stm_incident
+WHERE stm_incident_date_of_incident >= CURRENT_DATE - INTERVAL '1 year';
