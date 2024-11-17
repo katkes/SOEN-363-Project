@@ -5,3 +5,7 @@ stm_response_trips.json
 mta_bus_position_response_trips.json
 mta_response_trips.json
 gtfs_stm/
+incidents_reseau_du_metro_all.json
+kilometrage_metro_realise_all.json
+kilometrage_metro_planifie_all.json 
+Kilométrage réel.csv
