@@ -1,4 +1,5 @@
 .venv/
+__pycache__/
 stm_response_v1.json
 stm_response_v2.json
 stm_response_trips.json
@@ -9,3 +10,4 @@ incidents_reseau_du_metro_all.json
 kilometrage_metro_realise_all.json
 kilometrage_metro_planifie_all.json 
 Kilométrage réel.csv
+Creds.py

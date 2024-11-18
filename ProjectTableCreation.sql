@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
     stm_bus_stop_id VARCHAR(15) NOT NULL,
     stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
     stm_bus_stop_cancelled_moved_relocated_date DATE NOT NULL,
-    stm_bus_stop_cancelled_moved_relocated_reason VARCHAR(255) NOT NULL,
+    stm_bus_stop_cancelled_moved_relocated_reason TEXT NOT NULL,
     FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
 );
 

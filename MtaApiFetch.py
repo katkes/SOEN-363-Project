@@ -1,13 +1,10 @@
 import requests
-import psycopg2
 import json
 from google.protobuf.json_format import MessageToJson
 import gtfs_pb2 
+from Creds import connection, mtaBusApiKey
 
-connection = psycopg2.connect(host="localhost", dbname="SOEN-363-Project", user="postgres", password="1234", port=5432)
 cursor = connection.cursor()
-
-mtaBusApiKey = "c3c2b3dc-53ce-4eb8-8a4d-8b9c52d486e5"
 
 mtaTripUpdatesApiUrl = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace"
 mtaBusTripPositionResponse = requests.get(mtaTripUpdatesApiUrl)
@@ -30,11 +27,6 @@ if mtaBusTripPositionResponse.status_code == 200:
 else:
     print(f"Error: Received status code {mtaBusTripPositionResponse.status_code} for URL {mtaBusTripPositionResponse}")
     print(mtaBusTripPositionResponse.text)
-
-
-
-
-
 
 mtaBusTripPositionApiUrl = "https://gtfsrt.prod.obanyc.com/vehiclePositions?key=" + mtaBusApiKey
 mtaBusTripPositionResponse = requests.get(mtaBusTripPositionApiUrl)
