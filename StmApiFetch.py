@@ -4,6 +4,8 @@ import json
 from google.protobuf.json_format import MessageToJson
 import gtfs_pb2 
 import csv
+from datetime import datetime, timedelta
+
 
 connection = psycopg2.connect(
     host="localhost",
@@ -19,6 +21,18 @@ stmHeaders = {
     "apiKey": "l78e91cc66e0c54b5cbddbf53eefc45120"
 }
 
+
+def normalize_time(time_str):
+    try:
+        # Convert the time string to a datetime object
+        time_obj = datetime.strptime(time_str, "%H:%M")
+        # If the hour is 24 or more, normalize it to 00:00 of the next day
+        if time_obj.hour >= 24:
+            time_obj -= timedelta(hours=24)
+        return time_obj.strftime("%H:%M")
+    except ValueError:
+        # Handle invalid time format
+        return None
 
 
 # # Fetch and save response for version 1
@@ -36,16 +50,33 @@ stmHeaders = {
 serviceStatusApiUrlV2 = "https://api.stm.info/pub/od/i3/v2/messages/etatservice"
 stmServiceStatusResponseV2 = requests.get(serviceStatusApiUrlV2, headers=stmHeaders)
 
-for record in stmServiceStatusResponseV2.json():
-    print(record)
+stm_bus_stop_cancelled_moved_relocated_id = 1
 
-if stmServiceStatusResponseV2.status_code == 200:
-    stmResponseV2 = stmServiceStatusResponseV2.json()
-    with open('stm_response_v2.json', 'w') as json_file:
-        json.dump(stmResponseV2, json_file, indent=4)
-        print("Json response has been written to stm_response_v2.json")
-else:
-    print(f"Error: Received status code {stmServiceStatusResponseV2.status_code} for URL {serviceStatusApiUrlV2}")
+for record in stmServiceStatusResponseV2.json().get("alerts"):
+    if "cancelled" in record.get("description_texts")[1].get("text") and len(record.get("informed_entities")) == 3:
+        stop_code = record.get("informed_entities")[2].get("stop_code")
+        reason = record.get("description_texts")[1].get("text")
+        time_of_cancellation = normalize_time(record.get("active_periods").get("start"))
+
+        cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_code = %s", (stop_code,))
+        result = cursor.fetchone()
+        if result:
+            stm_bus_stop_id = result[0]
+
+        cursor.execute(
+                    "INSERT INTO stm_bus_stop_cancelled_moved_relocated (stm_bus_stop_cancelled_moved_relocated_id, stm_bus_stop_id, stm_bus_stop_code, stm_bus_stop_cancelled_moved_relocated_date, stm_bus_stop_cancelled_moved_relocated_reason) VALUES (%s, %s, %s, %s, %s)",
+                    (stm_bus_stop_cancelled_moved_relocated_id, stm_bus_stop_id, stop_code, time_of_cancellation, reason)
+                )
+        stm_bus_stop_cancelled_moved_relocated_id += 1
+
+
+# if stmServiceStatusResponseV2.status_code == 200:
+#     stmResponseV2 = stmServiceStatusResponseV2.json()
+#     with open('stm_response_v2.json', 'w') as json_file:
+#         json.dump(stmResponseV2, json_file, indent=4)
+#         print("Json response has been written to stm_response_v2.json")
+# else:
+#     print(f"Error: Received status code {stmServiceStatusResponseV2.status_code} for URL {serviceStatusApiUrlV2}")
 
 # stmMetroNumbers = {1: "Green", 2: "Orange", 4: "Yellow", 5: "Blue"}
 
@@ -74,69 +105,69 @@ else:
 
 
 
-# Create table for routes
-create_table_query = """
-CREATE TABLE IF NOT EXISTS stm_metro_line(
-    stm_metro_line_id INT PRIMARY KEY,
-    line_name VARCHAR(255),
-    line_number INT
-);
+# # Create table for routes
+# create_table_query = """
+# CREATE TABLE IF NOT EXISTS stm_metro_line(
+#     stm_metro_line_id INT PRIMARY KEY,
+#     line_name VARCHAR(255),
+#     line_number INT
+# );
 
-CREATE TABLE IF NOT EXISTS stm_bus_line(
-    stm_bus_line_id INT PRIMARY KEY,
-    line_name VARCHAR(255),
-    line_number INT
-);
+# CREATE TABLE IF NOT EXISTS stm_bus_line(
+#     stm_bus_line_id INT PRIMARY KEY,
+#     line_name VARCHAR(255),
+#     line_number INT
+# );
 
-CREATE TABLE IF NOT EXISTS stm_bus_stop(
-    stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
-    stm_bus_top_name VARCHAR(255),
-    stm_bus_stop_code INT
-);
+# CREATE TABLE IF NOT EXISTS stm_bus_stop(
+#     stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
+#     stm_bus_top_name VARCHAR(255),
+#     stm_bus_stop_code INT
+# );
 
-CREATE TABLE IF NOT EXISTS stm_metro_stop(
-    stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
-    stm_metro_stop_name VARCHAR(255),
-    stm_metro_stop_code INT
-);
-"""
-cursor.execute(create_table_query)
-connection.commit()
+# CREATE TABLE IF NOT EXISTS stm_metro_stop(
+#     stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
+#     stm_metro_stop_name VARCHAR(255),
+#     stm_metro_stop_code INT
+# );
+# """
+# cursor.execute(create_table_query)
+# connection.commit()
 
-def extract_line_name(line_string):
-    parts = line_string.split(" - ")
-    if len(parts) > 1:
-        return parts[1]
-    else:
-        return parts[0]
+# def extract_line_name(line_string):
+#     parts = line_string.split(" - ")
+#     if len(parts) > 1:
+#         return parts[1]
+#     else:
+#         return parts[0]
 
-# Insert data into stm_metro_line and stm_bus_line tables
-with open('gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
-    for row in csv_reader:
-        line_name = extract_line_name(row['route_long_name'])
-        if "Ligne" in row['route_long_name']:
-            insert_query = "INSERT INTO stm_metro_line (stm_metro_line_id, line_name, line_number) VALUES (%s, %s, %s);"
-            cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
-        else:
-            insert_query = "INSERT INTO stm_bus_line (stm_bus_line_id, line_name, line_number) VALUES (%s, %s, %s);"
-            cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
+# # Insert data into stm_metro_line and stm_bus_line tables
+# with open('gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
+#     csv_reader = csv.DictReader(csv_file)
+#     for row in csv_reader:
+#         line_name = extract_line_name(row['route_long_name'])
+#         if "Ligne" in row['route_long_name']:
+#             insert_query = "INSERT INTO stm_metro_line (stm_metro_line_id, line_name, line_number) VALUES (%s, %s, %s);"
+#             cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
+#         else:
+#             insert_query = "INSERT INTO stm_bus_line (stm_bus_line_id, line_name, line_number) VALUES (%s, %s, %s);"
+#             cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
 
-#Insert data into stm_metro_stop and stm_bus_stop tables
-with open('gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
-    for row in csv_reader:
-        print(row['stop_id'])
-        if "STATION" in row['stop_name']:
-            insert_query = "INSERT INTO stm_metro_stop (stm_metro_stop_id, stm_metro_stop_name, stm_metro_stop_code) VALUES (%s, %s, %s);"
-            cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
-        else: 
-            insert_query = "INSERT INTO stm_bus_stop (stm_bus_stop_id, stm_bus_top_name, stm_bus_stop_code) VALUES (%s, %s, %s);"
-            cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
+# #Insert data into stm_metro_stop and stm_bus_stop tables
+# with open('gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
+#     csv_reader = csv.DictReader(csv_file)
+#     for row in csv_reader:
+#         print(row['stop_id'])
+#         if "STATION" in row['stop_name']:
+#             insert_query = "INSERT INTO stm_metro_stop (stm_metro_stop_id, stm_metro_stop_name, stm_metro_stop_code) VALUES (%s, %s, %s);"
+#             cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
+#         else: 
+#             insert_query = "INSERT INTO stm_bus_stop (stm_bus_stop_id, stm_bus_top_name, stm_bus_stop_code) VALUES (%s, %s, %s);"
+#             cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
 
-connection.commit()
+# connection.commit()
 
 
 
-cursor.close()
-connection.close()
+# cursor.close()
+# connection.close()
