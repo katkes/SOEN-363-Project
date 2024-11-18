@@ -110,29 +110,29 @@ def extract_line_name(line_string):
     else:
         return parts[0]
 
-# # Insert data into stm_metro_line and stm_bus_line tables
-# with open('gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
-#     csv_reader = csv.DictReader(csv_file)
-#     for row in csv_reader:
-#         line_name = extract_line_name(row['route_long_name'])
-#         if "Ligne" in row['route_long_name']:
-#             insert_query = "INSERT INTO stm_metro_line (stm_metro_line_id, line_name, line_number) VALUES (%s, %s, %s);"
-#             cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
-#         else:
-#             insert_query = "INSERT INTO stm_bus_line (stm_bus_line_id, line_name, line_number) VALUES (%s, %s, %s);"
-#             cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
+# Insert data into stm_metro_line and stm_bus_line tables
+with open('gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    for row in csv_reader:
+        line_name = extract_line_name(row['route_long_name'])
+        if "Ligne" in row['route_long_name']:
+            insert_query = "INSERT INTO stm_metro_line (stm_metro_line_id, line_name, line_number) VALUES (%s, %s, %s);"
+            cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
+        else:
+            insert_query = "INSERT INTO stm_bus_line (stm_bus_line_id, line_name, line_number) VALUES (%s, %s, %s);"
+            cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
 
-# Insert data into stm_metro_stop and stm_bus_stop tables
-# with open('gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
-#     csv_reader = csv.DictReader(csv_file)
-#     for row in csv_reader:
-#         print(row['stop_id'])
-#         if "STATION" in row['stop_name']:
-#             insert_query = "INSERT INTO stm_metro_stop (stm_metro_stop_id, stm_metro_stop_name, stm_metro_stop_code) VALUES (%s, %s, %s);"
-#             cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
-#         else: 
-#             insert_query = "INSERT INTO stm_bus_stop (stm_bus_stop_id, stm_bus_top_name, stm_bus_stop_code) VALUES (%s, %s, %s);"
-#             cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
+#Insert data into stm_metro_stop and stm_bus_stop tables
+with open('gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    for row in csv_reader:
+        print(row['stop_id'])
+        if "STATION" in row['stop_name']:
+            insert_query = "INSERT INTO stm_metro_stop (stm_metro_stop_id, stm_metro_stop_name, stm_metro_stop_code) VALUES (%s, %s, %s);"
+            cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
+        else: 
+            insert_query = "INSERT INTO stm_bus_stop (stm_bus_stop_id, stm_bus_top_name, stm_bus_stop_code) VALUES (%s, %s, %s);"
+            cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
 
 connection.commit()
 

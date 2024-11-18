@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS stm_bus_line(
 CREATE TABLE IF NOT EXISTS stm_bus_stop(
     stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
     stm_bus_top_name VARCHAR(255),
-    stm_bus_stop_code INT
+    stm_bus_stop_code INT,
+    is_active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
@@ -75,3 +76,20 @@ CREATE VIEW low_key_access_stm_incident AS
 SELECT stm_incident_id, stm_incident_type, stm_incident_date_of_incident, stm_incident_location_of_incident
 FROM stm_incident
 WHERE stm_incident_date_of_incident >= CURRENT_DATE - INTERVAL '1 year';
+
+-- Create a trigger function to enforce referential integrity: Updating the bus stop's active status to false if it is placed in the stm_bus_stop_cancelled_moved_relocated table
+CREATE FUNCTION update_bus_stop_inactive()
+BEGIN
+    -- Update the associated bus stop's active status to false
+    UPDATE stm_bus_stop
+    SET is_active = FALSE
+    WHERE stm_bus_stop_id = NEW.stm_bus_stop_id;
+
+    RETURN NEW;
+END;
+
+-- Create a trigger to call the function before insert
+CREATE TRIGGER trg_update_bus_stop_inactive
+    AFTER INSERT ON stm_bus_stop_cancelled_moved_relocated
+    FOR EACH ROW
+    EXECUTE FUNCTION update_bus_stop_inactive();
