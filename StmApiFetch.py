@@ -98,7 +98,7 @@ color_mapping = {
 }
 
 # Insert data into stm_metro_line and stm_bus_line tables
-with open('gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
+with open('ConstantInformation/gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     for row in csv_reader:
         line_name = extract_line_name(row['route_long_name'])
@@ -111,7 +111,7 @@ with open('gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
             cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
 
 #Insert data into stm_metro_stop and stm_bus_stop tables
-with open('gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
+with open('ConstantInformation/gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     for row in csv_reader:
         if "STATION" in row['stop_name']:
@@ -217,13 +217,6 @@ if stmTripUpdatesResponse.status_code == 200:
 else:
     print(f"Error: Received status code {stmTripUpdatesResponse.status_code} for URL {stmTripUpdatesApiUrl}")
     print(stmTripUpdatesResponse.text)
-
-
-
-
-
-
-
 
 
 cursor.close()
