@@ -3,99 +3,11 @@ import json
 from google.protobuf.json_format import MessageToJson
 import gtfs_pb2 
 import csv
-from HelperFunctions import extract_line_name, epoch_to_date
+from HelperFunctions import extract_line_name, epoch_to_date, table_creation, french_english_color_mapping
 from Creds import connection, stmHeaders
 
-cursor = connection.cursor()    
-
-# Create table for routes
-create_table_query = """
-CREATE DOMAIN planned_kilometerage AS INT CHECK (VALUE >= 0);
-CREATE DOMAIN realized_kilometerage AS INT CHECK (VALUE >= 0);
-
-CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-CREATE TYPE metro_colour AS ENUM ('Green', 'Orange', 'Yellow', 'Blue');
-
-CREATE TABLE IF NOT EXISTS stm_metro_line(
-    stm_metro_line_id INT PRIMARY KEY,
-    line_colour metro_colour NOT NULL,
-    line_number INT NOT NULL CHECK (line_number > 0)
-);
-
-CREATE TABLE IF NOT EXISTS stm_bus_line(
-    stm_bus_line_id INT PRIMARY KEY,
-    line_name VARCHAR(255) NOT NULL,
-    line_number INT NOT NULL CHECK (line_number > 0)
-);
-
-CREATE TABLE IF NOT EXISTS stm_bus_stop(
-    stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
-    stm_bus_stop_name VARCHAR(255) NOT NULL,
-    stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
-    is_active BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
-    stm_bus_stop_cancelled_moved_relocated_id INT PRIMARY KEY,
-    stm_bus_stop_id VARCHAR(15) NOT NULL,
-    stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
-    stm_bus_stop_cancelled_moved_relocated_date DATE NOT NULL,
-    stm_bus_stop_cancelled_moved_relocated_reason VARCHAR(255) NOT NULL,
-    FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS stm_metro_stop(
-    stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
-    stm_metro_stop_name VARCHAR(255) NOT NULL,
-    stm_metro_stop_code INT NOT NULL CHECK (stm_metro_stop_code > 0)
-);
-
-CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
-    stm_metro_planned_kilometerage_id INT PRIMARY KEY,
-    stm_metro_line_id INT NOT NULL,
-    planned_kilometerage planned_kilometerage NOT NULL,
-    day_of_week day_of_week NOT NULL,
-    stm_metro_planned_kilometerage_date DATE NOT NULL,
-    FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
-);
-
-CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometrage (
-    stm_metro_realized_kilometrage_id INT PRIMARY KEY,
-    stm_metro_line_id INT NOT NULL,
-    realized_kilometerage realized_kilometerage NOT NULL,
-    day_of_week_or_type_of_day VARCHAR(25) NOT NULL,
-    stm_metro_realized_kilometrage_date DATE NOT NULL,
-    FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
-);
-
-CREATE TABLE IF NOT EXISTS stm_incident(
-    stm_incident_id INT PRIMARY KEY,
-    stm_incident_type VARCHAR(255) NOT NULL,
-    stm_incident_primary_cause VARCHAR(255) NOT NULL,
-    stm_incident_secondary_cause VARCHAR(255),
-    stm_incident_time_of_incident TIME NOT NULL,
-    stm_incident_time_of_resolution TIME,
-    stm_incident_date_of_incident DATE NOT NULL,
-    stm_incident_location_of_incident VARCHAR(255) NOT NULL,
-    stm_metro_line_id INT NOT NULL,
-    FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
-);
-
--- View for a low key access to the stm_incident table, only showing incidents from the last year
--- CREATE VIEW low_key_access_stm_incident AS
--- SELECT stm_incident_id, stm_incident_type, stm_incident_date_of_incident, stm_incident_location_of_incident
--- FROM stm_incident
--- WHERE stm_incident_date_of_incident >= CURRENT_DATE - INTERVAL '1 year';
-"""
-cursor.execute(create_table_query)
-connection.commit()
-
-color_mapping = {
-    "Verte": "Green",
-    "Orange": "Orange",
-    "Jaune": "Yellow",
-    "Bleue": "Blue"
-}
+cursor = connection.cursor()
+table_creation()
 
 # Insert data into stm_metro_line and stm_bus_line tables
 with open('ConstantInformation/gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
@@ -103,7 +15,7 @@ with open('ConstantInformation/gtfs_stm/routes.txt', mode='r', encoding='utf-8-s
     for row in csv_reader:
         line_name = extract_line_name(row['route_long_name'])
         if "Ligne" in row['route_long_name']:
-            color_name = color_mapping.get(line_name, line_name)
+            color_name = french_english_color_mapping.get(line_name, line_name)
             insert_query = "INSERT INTO stm_metro_line (stm_metro_line_id, line_colour, line_number) VALUES (%s, %s, %s);"
             cursor.execute(insert_query, (row['route_id'], color_name, row['route_id']))
         else:
@@ -192,8 +104,6 @@ for record in stmServiceStatusResponseV2.json().get("alerts"):
 #         print("Json response has been written to stm_response_v2.json")
 # else:
 #     print(f"Error: Received status code {stmServiceStatusResponseV2.status_code} for URL {serviceStatusApiUrlV2}")
-
-# stmMetroNumbers = {1: "Green", 2: "Orange", 4: "Yellow", 5: "Blue"}
 
 # Fetch and save trip updates
 stmTripUpdatesApiUrl = "https://api.stm.info/pub/od/gtfs-rt/ic/v2/tripUpdates"
