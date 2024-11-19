@@ -1,16 +1,8 @@
 import requests
-import psycopg2
 import json
 from HelperFunctions import normalize_time, day_of_week_mapping, stm_metro_line
 from Creds import connection
 
-connection = psycopg2.connect(
-    host="localhost",
-    dbname="SOEN-363-Project",
-    user="postgres",
-    password="1234",
-    port=5432
-)
 cursor = connection.cursor()
 
 ville_de_montreal_base_url = "https://donnees.montreal.ca/api/3/action/datastore_search"
@@ -37,7 +29,7 @@ while incidents_reseau_offset != incidents_reseau_limit:  # Limiting to 17200 re
 
 if incidents_reseau_du_metro_data:
     for record in incidents_reseau_du_metro_data:
-        line_name = record.get("Ligne", "").strip().lower()
+        line_name = record.get("Ligne", "").strip()
         if line_name not in stm_metro_line:
             continue
         line_id = stm_metro_line.get(line_name.capitalize())

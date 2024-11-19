@@ -10,11 +10,11 @@ cursor = connection.cursor()
 
 # Create table for routes
 create_table_query = """
--- CREATE DOMAIN IF NOT EXISTS planned_kilometerage AS INT CHECK (VALUE >= 0);
--- CREATE DOMAIN realized_kilometerage AS INT CHECK (VALUE >= 0);
+CREATE DOMAIN planned_kilometerage AS INT CHECK (VALUE >= 0);
+CREATE DOMAIN realized_kilometerage AS INT CHECK (VALUE >= 0);
 
--- CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
--- CREATE TYPE metro_colour AS ENUM ('Green', 'Orange', 'Yellow', 'Blue');
+CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+CREATE TYPE metro_colour AS ENUM ('Green', 'Orange', 'Yellow', 'Blue');
 
 CREATE TABLE IF NOT EXISTS stm_metro_line(
     stm_metro_line_id INT PRIMARY KEY,
