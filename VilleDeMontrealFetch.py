@@ -1,6 +1,6 @@
 import requests
 import json
-from HelperFunctions import normalize_time, day_of_week_mapping, stm_metro_line
+from HelperFunctions import normalize_time, day_of_week_mapping, stm_metro_line_mapping
 from Creds import connection
 
 cursor = connection.cursor()
@@ -30,9 +30,9 @@ while incidents_reseau_offset != incidents_reseau_limit:  # Limiting to 17200 re
 if incidents_reseau_du_metro_data:
     for record in incidents_reseau_du_metro_data:
         line_name = record.get("Ligne", "").strip()
-        if line_name not in stm_metro_line:
+        if line_name not in stm_metro_line_mapping:
             continue
-        line_id = stm_metro_line.get(line_name.capitalize())
+        line_id = stm_metro_line_mapping.get(line_name.capitalize())
         incident_time = normalize_time(record.get("Heure de l'incident"))
         incident_resolution_time = normalize_time(record.get("Heure de reprise"))
         cursor.execute("INSERT INTO stm_incident (stm_incident_id, stm_incident_type, stm_incident_primary_cause, stm_incident_secondary_cause, stm_incident_time_of_incident, stm_incident_time_of_resolution, stm_incident_date_of_incident, stm_incident_location_of_incident, stm_metro_line_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
@@ -72,14 +72,14 @@ if kilometrage_metro_planifie_data:
     for record in kilometrage_metro_planifie_data:
         day_of_week = day_of_week_mapping.get(record.get("Jour de la semaine"))
         line_name = record.get("Ligne", "").strip().lower()
-        line_id = stm_metro_line.get(line_name.capitalize())
+        line_id = stm_metro_line_mapping.get(line_name.capitalize())
         if line_id is None:
             continue
         planned_kilometerage_str = record.get("KM planifié", "0").replace(",", ".")
         planned_kilometerage = round(float(planned_kilometerage_str))
         cursor.execute("INSERT INTO stm_metro_planned_kilometerage (stm_metro_planned_kilometerage_id, stm_metro_line_id, planned_kilometerage, day_of_week, stm_metro_planned_kilometerage_date) VALUES (%s, %s, %s, %s, %s)", 
                         (record.get("_id"), 
-                        stm_metro_line.get(record.get("Ligne")), 
+                        stm_metro_line_mapping.get(record.get("Ligne")), 
                         planned_kilometerage, 
                         day_of_week,
                         record.get("Jour calendaire")))
@@ -103,7 +103,7 @@ for record in kilometrage_metro_realise_data:
     realized_kilometerage = round(float(realized_kilometerage_str))
     cursor.execute("INSERT INTO stm_metro_realized_kilometrage (stm_metro_realized_kilometrage_id, stm_metro_line_id, realized_kilometerage, day_of_week_or_type_of_day, stm_metro_realized_kilometrage_date) VALUES (%s, %s, %s, %s, %s)", 
                     (record.get("_id"), 
-                    stm_metro_line.get(record.get("Ligne")), 
+                    stm_metro_line_mapping.get(record.get("Ligne")), 
                     realized_kilometerage, 
                     record.get("Type de jour"),
                     record.get("Jour calendaire")))

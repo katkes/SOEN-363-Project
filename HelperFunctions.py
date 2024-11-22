@@ -23,11 +23,19 @@ french_english_color_mapping = {
     "Bleue": "Blue"
 }
 
-stm_metro_line = {
+stm_metro_line_mapping = {
     "Ligne verte": 1, 
     "Ligne orange": 2, 
     "Ligne jaune":4, 
     "Ligne bleue":5
+}
+
+location_type_mapping = {
+    0: "Stop",
+    1: "Station",
+    2: "Station entrance",
+    3: "Generic node",
+    4: "Boarding area"
 }
 
 def table_creation():
@@ -39,16 +47,40 @@ def table_creation():
     CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
     CREATE TYPE metro_colour AS ENUM ('Green', 'Orange', 'Yellow', 'Blue');
 
-    CREATE TABLE IF NOT EXISTS stm_metro_line(
-        stm_metro_line_id INT PRIMARY KEY,
-        line_colour metro_colour NOT NULL,
-        line_number INT NOT NULL CHECK (line_number > 0)
+    CREATE TABLE IF NOT EXISTS stm_bus(
+    stm_bus_id INT PRIMARY KEY,
+    stm_bus_number INT NOT NULL CHECK (stm_bus_number > 0),
+    stm_bus_capacity INT NOT NULL CHECK (stm_bus_capacity > 0)
     );
 
-    CREATE TABLE IF NOT EXISTS stm_bus_line(
-        stm_bus_line_id INT PRIMARY KEY,
-        line_name VARCHAR(255) NOT NULL,
-        line_number INT NOT NULL CHECK (line_number > 0)
+    CREATE TABLE IF NOT EXISTS stm_metro_route(
+        stm_metro_route_id INT PRIMARY KEY,
+        stm_metro_route_colour metro_colour NOT NULL,
+        stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
+    );
+
+    CREATE TABLE IF NOT EXISTS stm_bus_route(
+        stm_bus_route_id INT PRIMARY KEY,
+        stm_route_name VARCHAR(255) NOT NULL,
+        stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
+    );
+
+    CREATE TABLE IF NOT EXISTS stm_metro_trip (
+        stm_metro_trip_id INT PRIMARY KEY,
+        stm_metro_trip_route_id INT,
+        stm_metro_trip_service_id VARCHAR(255) NOT NULL,
+        stm_metro_trip_trip_headsign VARCHAR(255) NOT NULL,
+        stm_metro_trip_direction_id INT NOT NULL CHECK (stm_metro_trip_direction_id = 0 OR stm_metro_trip_direction_id = 1),
+        FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS stm_bus_trip (
+        stm_bus_trip_id INT PRIMARY KEY,
+        stm_bus_trip_route_id INT,
+        stm_bus_trip_service_id VARCHAR(255) NOT NULL,
+        stm_bus_trip_headsign VARCHAR(255) NOT NULL,
+        stm_bus_trip_direction_id INT NOT NULL CHECK (stm_bus_trip_direction_id = 0 OR stm_bus_trip_direction_id = 1),
+        FOREIGN KEY (stm_bus_trip_route_id) REFERENCES stm_bus_route(stm_bus_route_id)
     );
 
     CREATE TABLE IF NOT EXISTS stm_bus_stop(
@@ -63,7 +95,7 @@ def table_creation():
         stm_bus_stop_id VARCHAR(15) NOT NULL,
         stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
         stm_bus_stop_cancelled_moved_relocated_date DATE NOT NULL,
-        stm_bus_stop_cancelled_moved_relocated_reason VARCHAR(255) NOT NULL,
+        stm_bus_stop_cancelled_moved_relocated_reason TEXT NOT NULL,
         FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
     );
 
@@ -146,23 +178,44 @@ def insert_into_bus_metro_stop_line_tables(cursor):
             line_name = extract_line_name(row['route_long_name'])
             if "Ligne" in row['route_long_name']:
                 color_name = french_english_color_mapping.get(line_name, line_name)
-                insert_query = "INSERT INTO stm_metro_line (stm_metro_line_id, line_colour, line_number) VALUES (%s, %s, %s);"
+                insert_query = "INSERT INTO stm_metro_route (stm_metro_route_id, line_colour, route_number) VALUES (%s, %s, %s);"
                 cursor.execute(insert_query, (row['route_id'], color_name, row['route_id']))
             else:
-                insert_query = "INSERT INTO stm_bus_line (stm_bus_line_id, line_name, line_number) VALUES (%s, %s, %s);"
+                insert_query = "INSERT INTO stm_bus_line (stm_bus_route_id, route_name, route_number) VALUES (%s, %s, %s);"
                 cursor.execute(insert_query, (row['route_id'], line_name, row['route_id']))
     
     # Insert data into the stm_metro_stop and stm_bus_stop tables
     with open('ConstantInformation/gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
-            if "STATION" in row['stop_name']:
-                insert_query = "INSERT INTO stm_metro_stop (stm_metro_stop_id, stm_metro_stop_name, stm_metro_stop_code) VALUES (%s, %s, %s);"
-                cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
-            else: 
-                insert_query = "INSERT INTO stm_bus_stop (stm_bus_stop_id, stm_bus_stop_name, stm_bus_stop_code) VALUES (%s, %s, %s);"
-                cursor.execute(insert_query, (row['stop_id'], row['stop_name'], row['stop_code']))
-    
+            stop_id = row['stop_id']
+            stop_name = row['stop_name']
+            stop_code = row['stop_code']
+            stop_location_type = location_type_mapping.get(int(row['location_type']))
+            stop_latitude = row['stop_lat']
+            stop_longitude = row['stop_lon']
+            is_wheelchair_accessible = row['wheelchair_boarding'] == '1'
+            
+            if stop_location_type == "Stop" or stop_location_type == "Generic Node"  or stop_location_type == "Boarding area":
+                insert_query = "INSERT INTO stm_bus_stop (stm_bus_stop_id, stm_bus_stop_name, stm_bus_stop_code, stm_bus_stop_location_type, stm_bus_stop_latitude, stm_bus_stop_longitude, stm_bus_stop_is_wheelchair_accessible) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+            else:
+                insert_query = "INSERT INTO stm_metro_stop (stm_metro_stop_id, stm_metro_stop_name, stm_metro_stop_code, stm_metro_stop_location_type, stm_metro_stop_latitude, stm_metro_stop_longitude, stm_metro_stop_is_wheelchair_accessible) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+           
+            cursor.execute(insert_query, (stop_id, stop_name, stop_code, stop_location_type, stop_latitude, stop_longitude, is_wheelchair_accessible))
+
+    with open('ConstantInformation/gtfs_stm/trips.txt', mode='r', encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            trip_id = row['trip_id']
+            route_id = row['route_id']
+            service_id = row['service_id']
+            trip_headsign = row['trip_headsign']
+            direction_id = row['direction_id']
+            if route_id in stm_metro_line_mapping.values():
+                insert_query = "INSERT INTO stm_bus_trip (stm_bus_trip_id, stm_bus_trip_route_id, stm_bus_trip_service_id, stm_bus_trip_headsign, stm_bus_trip_direction_id) VALUES (%s, %s, %s, %s, %s);"
+            else:
+                insert_query = "INSERT INTO stm_metro_trip (stm_metro_trip_id, stm_metro_trip_route_id, stm_metro_trip_service_id, stm_metro_trip_headsign, stm_metro_trip_direction_id) VALUES (%s, %s, %s, %s, %s);"
+            cursor.execute(insert_query, (trip_id, route_id, service_id, trip_headsign, direction_id))
     connection.commit()
 
 def fetch_and_create_json_stm_response_json(url):

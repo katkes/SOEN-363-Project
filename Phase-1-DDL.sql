@@ -4,23 +4,61 @@ CREATE DOMAIN realized_kilometerage AS INT CHECK (VALUE >= 0);
 CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 CREATE TYPE metro_colour AS ENUM ('Green', 'Orange', 'Yellow', 'Blue');
 
-CREATE TABLE IF NOT EXISTS stm_metro_line(
-    stm_metro_line_id INT PRIMARY KEY,
-    line_colour metro_colour NOT NULL,
-    line_number INT NOT NULL CHECK (line_number > 0)
+CREATE TABLE IF NOT EXISTS stm_bus(
+    stm_bus_id INT PRIMARY KEY,
+    stm_bus_number INT NOT NULL CHECK (stm_bus_number > 0),
+    stm_bus_capacity INT NOT NULL CHECK (stm_bus_capacity > 0)
 );
 
-CREATE TABLE IF NOT EXISTS stm_bus_line(
-    stm_bus_line_id INT PRIMARY KEY,
-    line_name VARCHAR(255) NOT NULL,
-    line_number INT NOT NULL CHECK (line_number > 0)
+CREATE TABLE IF NOT EXISTS stm_metro_route(
+    stm_metro_route_id INT PRIMARY KEY,
+    stm_metro_route_colour metro_colour NOT NULL,
+    stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
+);
+
+CREATE TABLE IF NOT EXISTS stm_bus_route(
+    stm_bus_route_id INT PRIMARY KEY,
+    stm_route_name VARCHAR(255) NOT NULL,
+    stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
+);
+
+CREATE TABLE IF NOT EXISTS stm_metro_trip(
+    stm_metro_trip_id INT PRIMARY KEY,
+    stm_metro_trip_route_id INT,
+    stm_metro_trip_service_id VARCHAR(255) NOT NULL,
+    stm_metro_trip_trip_headsign VARCHAR(255) NOT NULL,
+    stm_metro_trip_direction_id INT NOT NULL CHECK (stm_metro_trip_direction_id = 0 OR stm_metro_trip_direction_id = 1),
+    FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+);
+
+CREATE TABLE IF NOT EXISTS stm_bus_trip(
+    stm_bus_trip_id INT PRIMARY KEY,
+    stm_bus_trip_route_id INT,
+    stm_bus_trip_service_id VARCHAR(255) NOT NULL,
+    stm_bus_trip_headsign VARCHAR(255) NOT NULL,
+    stm_bus_trip_direction_id INT NOT NULL CHECK (stm_bus_trip_direction_id = 0 OR stm_bus_trip_direction_id = 1),
+    FOREIGN KEY (stm_bus_trip_route_id) REFERENCES stm_bus_route(stm_bus_route_id)
 );
 
 CREATE TABLE IF NOT EXISTS stm_bus_stop(
     stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
     stm_bus_stop_name VARCHAR(255) NOT NULL,
     stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
-    is_active BOOLEAN DEFAULT TRUE
+    stm_bus_stop_location_type VARCHAR(255) NOT NULL,
+    stm_bus_stop_latitude DECIMAL(9, 6) NOT NULL,
+    stm_bus_stop_longitude DECIMAL(9, 6) NOT NULL,
+    stm_bus_stop_is_wheelchair_accessible BOOLEAN DEFAULT FALSE,
+    stm_bus_stop_is_active BOOLEAN DEFAULT TRUE,
+);
+
+CREATE TABLE IF NOT EXISTS stm_metro_stop(
+    stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
+    stm_metro_stop_name VARCHAR(255) NOT NULL,
+    stm_metro_stop_code INT NOT NULL CHECK (stm_metro_stop_code > 0),
+    stm_metro_stop_location_type VARCHAR(255) NOT NULL,
+    stm_metro_stop_latitude DECIMAL(9, 6) NOT NULL,
+    stm_metro_stop_longitude DECIMAL(9, 6) NOT NULL,
+    stm_metro_stop_is_wheelchair_accessible BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
@@ -30,12 +68,6 @@ CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
     stm_bus_stop_cancelled_moved_relocated_date DATE NOT NULL,
     stm_bus_stop_cancelled_moved_relocated_reason TEXT NOT NULL,
     FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS stm_metro_stop(
-    stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
-    stm_metro_stop_name VARCHAR(255) NOT NULL,
-    stm_metro_stop_code INT NOT NULL CHECK (stm_metro_stop_code > 0)
 );
 
 CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
@@ -80,7 +112,7 @@ CREATE FUNCTION update_bus_stop_inactive()
 BEGIN
     -- Update the associated bus stop's active status to false
     UPDATE stm_bus_stop
-    SET is_active = FALSE
+    SET stm_bus_stop_is_active = FALSE
     WHERE stm_bus_stop_code = NEW.stm_bus_stop_code;
 
     RETURN NEW;

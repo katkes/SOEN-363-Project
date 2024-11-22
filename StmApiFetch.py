@@ -1,6 +1,7 @@
 import requests
 from HelperFunctions import  epoch_to_date, table_creation, insert_into_bus_metro_stop_line_tables, fetch_and_create_json_stm_response_json, french_english_color_mapping
 from Creds import connection, stmHeaders
+import json
 
 cursor = connection.cursor()
 
@@ -41,3 +42,20 @@ for record in stmServiceStatusResponseV2.json().get("alerts"):
                 )
                 stm_bus_stop_cancelled_moved_relocated_id += 1
             connection.commit()
+
+with open('stm_response_trips.json', 'r') as file:
+    stm_response_trips = json.load(file)
+
+for trip in stm_response_trips.get("entity", []):
+    trip_update = trip.get("trip_update", {})
+    trip_id = trip_update.get("trip", {}).get("trip_id")
+    stop_time_updates = trip_update.get("stop_time_update", [])
+
+    for stop_time_update in stop_time_updates:
+        stop_id = stop_time_update.get("stop_id")
+        arrival = stop_time_update.get("arrival", {})
+        departure = stop_time_update.get("departure", {})
+        arrival_time = epoch_to_date(arrival.get("time")) if arrival.get("time") else None
+        departure_time = epoch_to_date(departure.get("time")) if departure.get("time") else None
+
+        print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")
