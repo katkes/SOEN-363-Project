@@ -76,7 +76,8 @@ FROM stm_incident
 WHERE stm_incident_date_of_incident >= CURRENT_DATE - INTERVAL '1 year';
 
 -- Create a trigger function to enforce referential integrity: Updating the bus stop's active status to false if it is placed in the stm_bus_stop_cancelled_moved_relocated table
-CREATE FUNCTION update_bus_stop_inactive()
+CREATE OR REPLACE FUNCTION update_bus_stop_inactive()
+RETURNS TRIGGER AS $$
 BEGIN
     -- Update the associated bus stop's active status to false
     UPDATE stm_bus_stop
@@ -85,6 +86,7 @@ BEGIN
 
     RETURN NEW;
 END;
+$$ LANGUAGE plpgsql;
 
 -- Create a trigger to call the function before insert
 CREATE TRIGGER trg_update_bus_stop_inactive
