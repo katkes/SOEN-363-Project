@@ -61,6 +61,15 @@ CREATE TABLE IF NOT EXISTS stm_metro_stop(
     stm_metro_stop_is_wheelchair_accessible BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE IF NOT EXISTS stm_stop_time(
+    stm_stop_time_id INT PRIMARY KEY,
+    stm_stop_time_trip_id INT NOT NULL,
+    stm_stop_time_stop_id VARCHAR(15) NOT NULL,
+    stm_stop_time_stop_sequence INT NOT NULL,
+    stm_stop_arrival_time TIME NOT NULL,
+    stm_stop_departure_time TIME NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
     stm_bus_stop_cancelled_moved_relocated_id INT PRIMARY KEY,
     stm_bus_stop_id VARCHAR(15) NOT NULL,

@@ -216,6 +216,26 @@ def insert_into_bus_metro_stop_line_tables(cursor):
             else:
                 insert_query = "INSERT INTO stm_metro_trip (stm_metro_trip_id, stm_metro_trip_route_id, stm_metro_trip_service_id, stm_metro_trip_headsign, stm_metro_trip_direction_id) VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(insert_query, (trip_id, route_id, service_id, trip_headsign, direction_id))
+    
+    with open('ConstantInformation/gtfs_stm/stop_times.txt', mode='r', encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        stop_time_id = 1
+        for row in csv_reader:
+            trip_id = row['trip_id']
+            stop_id = row['stop_id']
+            stop_sequence = row['stop_sequence']
+            arrival_time = row['arrival_time']
+            departure_time = row['departure_time']
+        
+        cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_code = %s", (stop_code,))
+        result = cursor.fetchone()
+        if result:
+            # make sure to make it that it enters bus or metro 
+        
+        insert_query = "INSERT INTO stm_stop_time (stm_stop_time_id, stm_stop_time_trip_id, stm_stop_time_stop_id, stm_stop_time_stop_sequence, stm_stop_time_arrival_time, stm_stop_time_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
+        cursor.execute(insert_query, (stop_time_id, trip_id, stop_id, stop_sequence, arrival_time, departure_time))
+        stop_time_id += 1
+    
     connection.commit()
 
 def fetch_and_create_json_stm_response_json(url):
