@@ -1,9 +1,11 @@
--- selects row where stm_bus_code is 54351
+-- Task : Basic select with simple where clause.
+-- Done : Selects row where stm_bus_code is 54351
 SELECT *
 FROM stm_bus_stop_cancelled_moved_relocated
 WHERE stm_bus_stop_code = 54351;
 
---total planned kilometerage for each metro line grouped by day of week
+-- Task : Basic select with simple group by clause (with and without having clause).
+-- Done : Total planned kilometerage for each metro line grouped by day of week
 SELECT 
     stm_metro_line_id,
     day_of_week,
@@ -15,16 +17,20 @@ GROUP BY
 ORDER BY 
     stm_metro_line_id, day_of_week;
 
--- Using simple JOIN
+-- Task: A simple join query as well as its equivalent implementation using cartesian product and where clause.
+-- Done: Using simple JOIN
 SELECT *
 FROM stm_metro_realized_kilometrage rk JOIN stm_metro_line sl on rk.stm_metro_line_id = sl.stm_metro_line_id;
--- Using cartesian product and WHERE clause
+
+-- Task: A simple join query as well as its equivalent implementation using cartesian product and where clause.
+-- Done: Using cartesian product and WHERE clause
 SELECT *
 FROM stm_metro_realized_kilometrage rk
 CROSS JOIN stm_metro_line sl;
 WHERE rk.stm_metro_line_id = sl.stm_metro_line_id;
 
---inner join
+-- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
+-- Done: Inner join
 SELECT 
     b.stm_bus_stop_id, 
     b.stm_bus_stop_name, 
@@ -36,7 +42,8 @@ INNER JOIN
 ON 
     b.stm_bus_stop_code = c.stm_bus_stop_code;
 
---outer left join
+-- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
+-- Done: Outer left join
 SELECT 
     b.stm_bus_stop_id, 
     b.stm_bus_stop_name, 
@@ -48,7 +55,8 @@ LEFT JOIN
 ON 
     b.stm_bus_stop_code = c.stm_bus_stop_code;
 
---outer right join
+-- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
+-- Done: Outer right join
 SELECT 
     b.stm_bus_stop_id, 
     b.stm_bus_stop_name, 
@@ -59,8 +67,9 @@ RIGHT JOIN
     stm_bus_stop_cancelled_moved_relocated c
 ON 
     b.stm_bus_stop_code = c.stm_bus_stop_code;
-
---full outer 
+    
+-- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
+-- Done: Full outer 
 SELECT 
     b.stm_bus_stop_id, 
     b.stm_bus_stop_name, 
@@ -72,8 +81,14 @@ FULL JOIN
 ON 
     b.stm_bus_stop_code = c.stm_bus_stop_code;
 
---correlated queries
---above average kilometrage metro lines
+
+-- Task: A few queries to demonstrate use of Null values for undefined / non-applicable.
+-- Done:
+
+
+
+-- Task: A couple of examples to demonstrate correlated queries.
+-- Done: Display above average kilometrage metro lines using correlated queries
 SELECT 
     m.stm_metro_line_id,
     m.planned_kilometerage,
@@ -86,6 +101,30 @@ WHERE
         FROM stm_metro_planned_kilometerage m2
         WHERE m2.day_of_week = m.day_of_week
     );
+
+
+-- Task: One example per set operations: intersect, union, and difference vs. their equivalences
+-- Done:
+
+
+
+-- Task: An example of a view that has a hard-coded criteria, by which the content of the view may change upon changing the hard-coded value.
+-- Done: View the incidents on a specific line (Green line) 
+CREATE OR REPLACE VIEW green_line_incidents AS
+SELECT 
+    i.stm_incident_id,
+    i.stm_incident_type,
+    i.stm_incident_date_of_incident,
+    i.stm_incident_location_of_incident
+FROM 
+    stm_incident i
+JOIN 
+    stm_metro_line m
+ON 
+    i.stm_metro_line_id = m.stm_metro_line_id
+WHERE 
+    m.line_colour = 'Green';
+
 
 --bus stops with more than one planned kilometerage entry
 SELECT 
@@ -110,29 +149,16 @@ WHERE
         WHERE p2.stm_metro_line_id = p.stm_metro_line_id
     );
 
---specific metro line incicents (green cuz its actually bad)
-CREATE OR REPLACE VIEW green_line_incidents AS
-SELECT 
-    i.stm_incident_id,
-    i.stm_incident_type,
-    i.stm_incident_date_of_incident,
-    i.stm_incident_location_of_incident
-FROM 
-    stm_incident i
-JOIN 
-    stm_metro_line m
-ON 
-    i.stm_metro_line_id = m.stm_metro_line_id
-WHERE 
-    m.line_colour = 'Green';
 
---bus stops with no cancellation or relocation (USING NOT IN)
+-- Task: Two implementations of the division operator using a) a regular nested query using NOT IN and b) a correlated nested query using NOT EXISTS and EXCEPT
+-- Done: Bus stops with no cancellation or relocation (USING NOT IN)
 SELECT stm_bus_stop_id
 FROM stm_bus_stop
 WHERE stm_bus_stop_id NOT IN (
     SELECT stm_bus_stop_id
     FROM stm_bus_stop_cancelled_moved_relocated
 );
+
 
 --using NOT EXISTS
 SELECT stm_bus_stop_id
@@ -212,3 +238,31 @@ FROM stm_metro_line
 WHERE line_colour = 'Green')
 GROUP BY stm_metro_line_id
 ORDER BY stm_metro_line_id DESC;
+
+-- Task: Two queries that demonstrate the overlap and covering constraints.
+-- Done: Query to demonstrate overlap constraint
+SELECT 
+    bs.stm_bus_stop_id, 
+    bs.stm_bus_stop_name, 
+    c.stm_bus_stop_cancelled_moved_relocated_date, 
+    c.stm_bus_stop_cancelled_moved_relocated_reason
+FROM 
+    stm_bus_stop bs
+JOIN 
+    stm_bus_stop_cancelled_moved_relocated c
+ON 
+    b.stm_bus_stop_id = c.stm_bus_stop_id;
+
+-- Task: Two queries that demonstrate the overlap and covering constraints.
+-- Done: Query to demonstrate covering constraint
+SELECT 
+    bs.stm_bus_stop_id, 
+    bs.stm_bus_stop_name
+FROM 
+    stm_bus_stop b
+LEFT JOIN 
+    stm_bus_stop_cancelled_moved_relocated c
+ON 
+    b.stm_bus_stop_id = c.stm_bus_stop_id
+WHERE 
+    c.stm_bus_stop_id IS NULL;
