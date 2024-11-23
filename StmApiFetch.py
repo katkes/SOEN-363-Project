@@ -9,9 +9,10 @@ table_creation()
 insert_into_stm_stop_line_tables(cursor)
 
 # Fetch and save response for version 1 and 2 of the service status API, as well as live location data into corresponding JSON files
-fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v1/messages/etatservice")
-fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v2/messages/etatservice")
-fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/gtfs-rt/ic/v2/tripUpdates")
+# TODO: Look into why this doesn't work anymore 
+# fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v1/messages/etatservice")
+# fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v2/messages/etatservice")
+# fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/gtfs-rt/ic/v2/tripUpdates")
 
 serviceStatusApiUrlV2 = "https://api.stm.info/pub/od/i3/v2/messages/etatservice"
 stmServiceStatusResponseV2 = requests.get(serviceStatusApiUrlV2, headers=stmHeaders)
@@ -43,19 +44,20 @@ for record in stmServiceStatusResponseV2.json().get("alerts"):
                 stm_bus_stop_cancelled_moved_relocated_id += 1
             connection.commit()
 
-with open('stm_response_trips.json', 'r') as file:
-    stm_response_trips = json.load(file)
+# TODO: Implement real-time data database implementation
+# with open('stm_response_trips.json', 'r') as file:
+#     stm_response_trips = json.load(file)
 
-for trip in stm_response_trips.get("entity", []):
-    trip_update = trip.get("trip_update", {})
-    trip_id = trip_update.get("trip", {}).get("trip_id")
-    stop_time_updates = trip_update.get("stop_time_update", [])
+# for trip in stm_response_trips.get("entity", []):
+#     trip_update = trip.get("trip_update", {})
+#     trip_id = trip_update.get("trip", {}).get("trip_id")
+#     stop_time_updates = trip_update.get("stop_time_update", [])
 
-    for stop_time_update in stop_time_updates:
-        stop_id = stop_time_update.get("stop_id")
-        arrival = stop_time_update.get("arrival", {})
-        departure = stop_time_update.get("departure", {})
-        arrival_time = epoch_to_date(arrival.get("time")) if arrival.get("time") else None
-        departure_time = epoch_to_date(departure.get("time")) if departure.get("time") else None
+#     for stop_time_update in stop_time_updates:
+#         stop_id = stop_time_update.get("stop_id")
+#         arrival = stop_time_update.get("arrival", {})
+#         departure = stop_time_update.get("departure", {})
+#         arrival_time = epoch_to_date(arrival.get("time")) if arrival.get("time") else None
+#         departure_time = epoch_to_date(departure.get("time")) if departure.get("time") else None
 
-        print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")
+#         print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")

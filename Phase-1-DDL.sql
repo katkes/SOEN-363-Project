@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS stm_metro_trip(
     stm_metro_trip_id INT PRIMARY KEY,
     stm_metro_trip_route_id INT,
     stm_metro_trip_service_id VARCHAR(255) NOT NULL,
-    stm_metro_trip_trip_headsign VARCHAR(255) NOT NULL,
+    stm_metro_trip_headsign VARCHAR(255) NOT NULL,
     stm_metro_trip_direction_id INT NOT NULL CHECK (stm_metro_trip_direction_id = 0 OR stm_metro_trip_direction_id = 1),
     FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS stm_bus_stop(
     stm_bus_stop_latitude DECIMAL(9, 6) NOT NULL,
     stm_bus_stop_longitude DECIMAL(9, 6) NOT NULL,
     stm_bus_stop_is_wheelchair_accessible BOOLEAN DEFAULT FALSE,
-    stm_bus_stop_is_active BOOLEAN DEFAULT TRUE,
+    stm_bus_stop_is_active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS stm_metro_stop(
@@ -124,13 +124,14 @@ CREATE TABLE IF NOT EXISTS stm_incident(
 );
 
 -- View for a low key access to the stm_incident table, only showing incidents from the last year
-CREATE VIEW low_key_access_stm_incident AS
+CREATE OR REPLACE VIEW low_key_access_stm_incident AS
 SELECT stm_incident_id, stm_incident_type, stm_incident_date_of_incident, stm_incident_location_of_incident
 FROM stm_incident
 WHERE stm_incident_date_of_incident >= CURRENT_DATE - INTERVAL '1 year';
 
 -- Create a trigger function to enforce referential integrity: Updating the bus stop's active status to false if it is placed in the stm_bus_stop_cancelled_moved_relocated table
-CREATE FUNCTION update_bus_stop_inactive()
+CREATE OR REPLACE FUNCTION update_bus_stop_inactive()
+RETURNS TRIGGER AS $$
 BEGIN
     -- Update the associated bus stop's active status to false
     UPDATE stm_bus_stop
@@ -139,9 +140,10 @@ BEGIN
 
     RETURN NEW;
 END;
+$$ LANGUAGE plpgsql;
 
--- Create a trigger to call the function before insert
+-- Create a trigger to call the function after insert
 CREATE TRIGGER trg_update_bus_stop_inactive
-    AFTER INSERT ON stm_bus_stop_cancelled_moved_relocated
-    FOR EACH ROW
-    EXECUTE FUNCTION update_bus_stop_inactive();
+AFTER INSERT ON stm_bus_stop_cancelled_moved_relocated
+FOR EACH ROW
+EXECUTE FUNCTION update_bus_stop_inactive();
