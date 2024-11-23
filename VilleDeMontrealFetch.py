@@ -15,6 +15,7 @@ incidents_reseau_du_metro_data, kilometrage_metro_planifie_data, kilometrage_met
 number_of_records_per_request = 100  # Number of records to fetch per request
 incidents_reseau_offset, kilometrage_metro_planifie_offset, kilometrage_metro_realise_offset = 0, 0, 0
 incidents_reseau_limit, kilometrage_metro_planifie_limit, kilometrage_metro_realise_limit = 17200, 5400, 31000
+jour_calendaire = "Jour calendaire"
 
 while incidents_reseau_offset != incidents_reseau_limit:  # Limiting to 17200 records out of the available records
     response = requests.get(f"{ville_de_montreal_base_url}?resource_id={incidents_reseau_du_metro_resource_id}&limit={number_of_records_per_request}&offset={incidents_reseau_offset}")
@@ -42,7 +43,7 @@ if incidents_reseau_du_metro_data:
                         record.get("Cause secondaire"), 
                         normalize_time(record.get("Heure de l'incident")), 
                         normalize_time(record.get("Heure de reprise")), 
-                        record.get("Jour calendaire"), 
+                        record.get(jour_calendaire), 
                         record.get("Code de lieu"), 
                         line_id))
         connection.commit()
@@ -82,7 +83,7 @@ if kilometrage_metro_planifie_data:
                         stm_metro_line_mapping.get(record.get("Ligne")), 
                         planned_kilometerage, 
                         day_of_week,
-                        record.get("Jour calendaire")))
+                        record.get(jour_calendaire)))
         connection.commit()
 
 # # Save all data to a JSON file
@@ -106,7 +107,7 @@ for record in kilometrage_metro_realise_data:
                     stm_metro_line_mapping.get(record.get("Ligne")), 
                     realized_kilometerage, 
                     record.get("Type de jour"),
-                    record.get("Jour calendaire")))
+                    record.get(jour_calendaire)))
     connection.commit()
 
 # This is deprecated as we have already downloaded the data and saved it to a JSON file, otherwise would have taken too long to fetch all the data

@@ -61,13 +61,26 @@ CREATE TABLE IF NOT EXISTS stm_metro_stop(
     stm_metro_stop_is_wheelchair_accessible BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE IF NOT EXISTS stm_stop_time(
-    stm_stop_time_id INT PRIMARY KEY,
-    stm_stop_time_trip_id INT NOT NULL,
-    stm_stop_time_stop_id VARCHAR(15) NOT NULL,
-    stm_stop_time_stop_sequence INT NOT NULL,
-    stm_stop_arrival_time TIME NOT NULL,
-    stm_stop_departure_time TIME NOT NULL
+CREATE TABLE IF NOT EXISTS stm_metro_stop_time(
+    stm_metro_stop_time_id INT PRIMARY KEY,
+    stm_metro_stop_time_trip_id INT NOT NULL,
+    stm_metro_stop_time_stop_id VARCHAR(15) NOT NULL,
+    stm_metro_stop_time_stop_sequence INT NOT NULL,
+    stm_metro_stop_arrival_time TIME NOT NULL,
+    stm_metro_stop_departure_time TIME NOT NULL,
+    FOREIGN KEY (stm_metro_stop_time_trip_id) REFERENCES stm_metro_trip(stm_metro_trip_id),
+    FOREIGN KEY (stm_metro_stop_time_stop_id) REFERENCES stm_metro_stop(stm_metro_stop_id)
+);
+
+CREATE TABLE IF NOT EXISTS stm_bus_stop_time(
+    stm_bus_stop_time_id INT PRIMARY KEY,
+    stm_bus_stop_time_trip_id INT NOT NULL,
+    stm_bus_stop_time_stop_id VARCHAR(15) NOT NULL,
+    stm_bus_stop_time_stop_sequence INT NOT NULL,
+    stm_bus_stop_arrival_time TIME NOT NULL,
+    stm_bus_stop_departure_time TIME NOT NULL,
+    FOREIGN KEY (stm_bus_stop_time_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id),
+    FOREIGN KEY (stm_bus_stop_time_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
 );
 
 CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(

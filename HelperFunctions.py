@@ -65,7 +65,7 @@ def table_creation():
         stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
     );
 
-    CREATE TABLE IF NOT EXISTS stm_metro_trip (
+    CREATE TABLE IF NOT EXISTS stm_metro_trip(
         stm_metro_trip_id INT PRIMARY KEY,
         stm_metro_trip_route_id INT,
         stm_metro_trip_service_id VARCHAR(255) NOT NULL,
@@ -74,7 +74,7 @@ def table_creation():
         FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
     );
 
-    CREATE TABLE IF NOT EXISTS stm_bus_trip (
+    CREATE TABLE IF NOT EXISTS stm_bus_trip(
         stm_bus_trip_id INT PRIMARY KEY,
         stm_bus_trip_route_id INT,
         stm_bus_trip_service_id VARCHAR(255) NOT NULL,
@@ -87,7 +87,43 @@ def table_creation():
         stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
         stm_bus_stop_name VARCHAR(255) NOT NULL,
         stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
-        is_active BOOLEAN DEFAULT TRUE
+        stm_bus_stop_location_type VARCHAR(255) NOT NULL,
+        stm_bus_stop_latitude DECIMAL(9, 6) NOT NULL,
+        stm_bus_stop_longitude DECIMAL(9, 6) NOT NULL,
+        stm_bus_stop_is_wheelchair_accessible BOOLEAN DEFAULT FALSE,
+        stm_bus_stop_is_active BOOLEAN DEFAULT TRUE
+    );
+
+    CREATE TABLE IF NOT EXISTS stm_metro_stop(
+        stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
+        stm_metro_stop_name VARCHAR(255) NOT NULL,
+        stm_metro_stop_code INT NOT NULL CHECK (stm_metro_stop_code > 0),
+        stm_metro_stop_location_type VARCHAR(255) NOT NULL,
+        stm_metro_stop_latitude DECIMAL(9, 6) NOT NULL,
+        stm_metro_stop_longitude DECIMAL(9, 6) NOT NULL,
+        stm_metro_stop_is_wheelchair_accessible BOOLEAN DEFAULT FALSE
+    );
+
+    CREATE TABLE IF NOT EXISTS stm_metro_stop_time(
+        stm_metro_stop_time_id INT PRIMARY KEY,
+        stm_metro_stop_time_trip_id INT NOT NULL,
+        stm_metro_stop_time_stop_id VARCHAR(15) NOT NULL,
+        stm_metro_stop_time_stop_sequence INT NOT NULL,
+        stm_metro_stop_arrival_time TIME NOT NULL,
+        stm_metro_stop_departure_time TIME NOT NULL,
+        FOREIGN KEY (stm_metro_stop_time_trip_id) REFERENCES stm_metro_trip(stm_metro_trip_id),
+        FOREIGN KEY (stm_metro_stop_time_stop_id) REFERENCES stm_metro_stop(stm_metro_stop_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS stm_bus_stop_time(
+        stm_bus_stop_time_id INT PRIMARY KEY,
+        stm_bus_stop_time_trip_id INT NOT NULL,
+        stm_bus_stop_time_stop_id VARCHAR(15) NOT NULL,
+        stm_bus_stop_time_stop_sequence INT NOT NULL,
+        stm_bus_stop_arrival_time TIME NOT NULL,
+        stm_bus_stop_departure_time TIME NOT NULL,
+        FOREIGN KEY (stm_bus_stop_time_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id),
+        FOREIGN KEY (stm_bus_stop_time_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
     );
 
     CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
@@ -97,12 +133,6 @@ def table_creation():
         stm_bus_stop_cancelled_moved_relocated_date DATE NOT NULL,
         stm_bus_stop_cancelled_moved_relocated_reason TEXT NOT NULL,
         FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS stm_metro_stop(
-        stm_metro_stop_id VARCHAR(15) PRIMARY KEY,
-        stm_metro_stop_name VARCHAR(255) NOT NULL,
-        stm_metro_stop_code INT NOT NULL CHECK (stm_metro_stop_code > 0)
     );
 
     CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
@@ -170,7 +200,7 @@ def extract_line_name(line_string):
 def epoch_to_date(epoch):
     return datetime.fromtimestamp(epoch).strftime('%Y-%m-%d')
 
-def insert_into_bus_metro_stop_line_tables(cursor):
+def insert_into_stm_stop_line_tables(cursor):
     # Insert data into the stm_metro_line and stm_bus_line tables
     with open('ConstantInformation/gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -203,6 +233,7 @@ def insert_into_bus_metro_stop_line_tables(cursor):
            
             cursor.execute(insert_query, (stop_id, stop_name, stop_code, stop_location_type, stop_latitude, stop_longitude, is_wheelchair_accessible))
 
+    # Insert data into the stm_metro_trip and stm_bus_trip tables
     with open('ConstantInformation/gtfs_stm/trips.txt', mode='r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
@@ -217,6 +248,7 @@ def insert_into_bus_metro_stop_line_tables(cursor):
                 insert_query = "INSERT INTO stm_metro_trip (stm_metro_trip_id, stm_metro_trip_route_id, stm_metro_trip_service_id, stm_metro_trip_headsign, stm_metro_trip_direction_id) VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(insert_query, (trip_id, route_id, service_id, trip_headsign, direction_id))
     
+    # Insert data into the stm_metro_stop_time and stm_bus_stop_time tables
     with open('ConstantInformation/gtfs_stm/stop_times.txt', mode='r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         stop_time_id = 1
@@ -226,16 +258,21 @@ def insert_into_bus_metro_stop_line_tables(cursor):
             stop_sequence = row['stop_sequence']
             arrival_time = row['arrival_time']
             departure_time = row['departure_time']
+
+            cursor.execute("SELECT stm_bus_trip_id FROM stm_bus_trip WHERE stm_bus_trip_id = %s", (trip_id))
+            result_trip = cursor.fetchone()
+            
+            cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_code = %s", (stop_id))
+            result_stop = cursor.fetchone()
+
+            if result_trip and result_stop:
+                insert_query = "INSERT INTO stm_bus_stop_time (stm_bus_stop_time_id, stm_bus_stop_time_trip_id, stm_bus_stop_time_stop_id, stm_bus_stop_time_stop_sequence, stm_bus_stop_time_arrival_time, stm_bus_stop_time_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
+            else:
+                insert_query = "INSERT INTO stm_metro_stop_time (stm_metro_stop_time_id, stm_metro_stop_time_trip_id, stm_metro_stop_time_stop_id, stm_metro_stop_time_stop_sequence, stm_metro_stop_time_arrival_time, stm_metro_stop_time_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
+            
+            cursor.execute(insert_query, (stop_time_id, trip_id, stop_id, stop_sequence, arrival_time, departure_time))
+            stop_time_id += 1
         
-        cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_code = %s", (stop_code,))
-        result = cursor.fetchone()
-        if result:
-            # make sure to make it that it enters bus or metro 
-        
-        insert_query = "INSERT INTO stm_stop_time (stm_stop_time_id, stm_stop_time_trip_id, stm_stop_time_stop_id, stm_stop_time_stop_sequence, stm_stop_time_arrival_time, stm_stop_time_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
-        cursor.execute(insert_query, (stop_time_id, trip_id, stop_id, stop_sequence, arrival_time, departure_time))
-        stop_time_id += 1
-    
     connection.commit()
 
 def fetch_and_create_json_stm_response_json(url):

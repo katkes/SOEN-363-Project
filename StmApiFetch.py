@@ -1,12 +1,12 @@
 import requests
-from HelperFunctions import  epoch_to_date, table_creation, insert_into_bus_metro_stop_line_tables, fetch_and_create_json_stm_response_json, french_english_color_mapping
+from HelperFunctions import  epoch_to_date, table_creation, insert_into_stm_stop_line_tables, fetch_and_create_json_stm_response_json, french_english_color_mapping
 from Creds import connection, stmHeaders
 import json
 
 cursor = connection.cursor()
 
 table_creation()
-insert_into_bus_metro_stop_line_tables(cursor)
+insert_into_stm_stop_line_tables(cursor)
 
 # Fetch and save response for version 1 and 2 of the service status API, as well as live location data into corresponding JSON files
 fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v1/messages/etatservice")
