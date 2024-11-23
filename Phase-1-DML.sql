@@ -149,3 +149,7 @@ FROM stm_bus_stop
 EXCEPT
 SELECT stm_bus_stop_id
 FROM stm_bus_stop_cancelled_moved_relocated;
+
+-- demonstrating use of null values for undefined / non-applicable
+SELECT * 
+FROM stm_bus_stop sbs LEFT JOIN stm_bus_stop_cancelled_moved_relocated sbsc ON sbs.stm_bus_stop_id = sbsc.stm_bus_stop_id;
