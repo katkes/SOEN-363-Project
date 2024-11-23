@@ -102,7 +102,7 @@ with open('ConstantInformation/kilometrage_metro_realise_all.json', 'r', encodin
 for record in kilometrage_metro_realise_data:
     realized_kilometerage_str = record.get("Km voiture", "0").replace(",", ".")
     realized_kilometerage = round(float(realized_kilometerage_str))
-    cursor.execute("INSERT INTO stm_metro_realized_kilometrage (stm_metro_realized_kilometrage_id, stm_metro_line_id, realized_kilometerage, day_of_week_or_type_of_day, stm_metro_realized_kilometrage_date) VALUES (%s, %s, %s, %s, %s)", 
+    cursor.execute("INSERT INTO stm_metro_realized_kilometerage (stm_metro_realized_kilometerage_id, stm_metro_line_id, realized_kilometerage, day_of_week_or_type_of_day, stm_metro_realized_kilometerage_date) VALUES (%s, %s, %s, %s, %s)", 
                     (record.get("_id"), 
                     stm_metro_line_mapping.get(record.get("Ligne")), 
                     realized_kilometerage, 

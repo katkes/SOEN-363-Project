@@ -49,17 +49,46 @@ with open('stm_response_trips.json', 'r') as file:
     stm_response_trips = json.load(file)
     print("hello")
 
+    live_trip_id = 1
     for record in stm_response_trips.get("entity", []):
-        print(len(record))
-        print(record)
-        live_trip_update = record.get("trip_update", {})
+
+        trip_update = record.get("tripUpdate", {})
+
+        trip = trip_update.get("trip", {})
+        stop_time_updates = trip_update.get("stopTimeUpdate", [])
+        time_of_record = trip_update.get("timestamp")
+
+        trip_id = trip.get("trip_id")
+        start_date = epoch_to_date(trip.get("startDate"))
+        schedule_relationship = trip.get("scheduleRelationship") # Either scheduled or canceled
+        route_id = trip.get("routeId")
+
+        for stop in stop_time_updates:
+            stop_sequence = stop.get("stopSequence")
+            arrival_time = stop.get("arrival", {}).get("time")
+            departure_time = stop.get("departure", {}).get("time")
+
+
+
+            stop_id = stop.get("stopId")
+            arrival = stop.get("arrival", {})
+            departure = stop.get("departure", {})
+            arrival_time = epoch_to_date(arrival.get("time")) if arrival.get("time") else None
+            departure_time = epoch_to_date(departure.get("time")) if departure.get("time") else None
+
+            # print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")
+
+
+        # print(len(record))
+        # print(record)
+        live_trip_update = record.get("tripUpdate", {})
         trip_id = live_trip_update.get("trip", {}).get("trip_id")
 
+        # print(live_trip_update)
 
-
-        trip_update = record.get("trip_update", {})
+        
         trip_id = trip_update.get("trip", {}).get("trip_id")
-        stop_time_updates = trip_update.get("stop_time_update", [])
+        stop_time_updates = trip_update.get("stopTimeUpdate", [])
         
         if not stop_time_updates:
             continue
@@ -71,4 +100,4 @@ with open('stm_response_trips.json', 'r') as file:
             arrival_time = epoch_to_date(arrival.get("time")) if arrival.get("time") else None
             departure_time = epoch_to_date(departure.get("time")) if departure.get("time") else None
 
-            print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")
+            # print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")

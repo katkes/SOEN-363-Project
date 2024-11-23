@@ -144,12 +144,12 @@ def table_creation():
         FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
     );
 
-    CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometrage (
-        stm_metro_realized_kilometrage_id INT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometerage (
+        stm_metro_realized_kilometerage_id INT PRIMARY KEY,
         stm_metro_route_id INT NOT NULL,
         realized_kilometerage realized_kilometerage NOT NULL,
         day_of_week_or_type_of_day VARCHAR(25) NOT NULL,
-        stm_metro_realized_kilometrage_date DATE NOT NULL,
+        stm_metro_realized_kilometerage_date DATE NOT NULL,
         FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
     );
 
@@ -215,6 +215,7 @@ def extract_line_name(line_string):
         return parts[0]
     
 def epoch_to_date(epoch):
+    epoch = int(epoch)
     return datetime.fromtimestamp(epoch).strftime('%Y-%m-%d')
 
 def insert_into_stm_stop_line_tables(cursor):

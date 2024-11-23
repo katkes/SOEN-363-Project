@@ -101,12 +101,12 @@ CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
     FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
 
-CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometrage (
-    stm_metro_realized_kilometrage_id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometerage (
+    stm_metro_realized_kilometerage_id INT PRIMARY KEY,
     stm_metro_route_id INT NOT NULL,
     realized_kilometerage realized_kilometerage NOT NULL,
     day_of_week_or_type_of_day VARCHAR(25) NOT NULL,
-    stm_metro_realized_kilometrage_date DATE NOT NULL,
+    stm_metro_realized_kilometerage_date DATE NOT NULL,
     FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
 
@@ -122,6 +122,22 @@ CREATE TABLE IF NOT EXISTS stm_incident(
     stm_metro_route_id INT NOT NULL,
     FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
+
+CREATE TABLE IF NOT EXISTS live_stm_bus_trip(
+    live_stm_bus_trip_id INT PRIMARY KEY,
+    stm_bus_trip_id INT NOT NULL,
+    live_stm_bus_trip_date DATE NOT NULL,
+)
+
+CREATE TABLE IF NOT EXISTS live_stm_bus_trip_stop(
+    live_stm_bus_trip_stop_id INT PRIMARY KEY,
+    live_stm_bus_trip_id INT NOT NULL,
+    stm_bus_stop_id VARCHAR(15) NOT NULL,
+    live_stm_bus_stop_arrival_time TIMESTAMP NOT NULL,
+    live_stm_bus_stop_departure_time TIMESTAMP NOT NULL,
+    FOREIGN KEY (live_stm_bus_trip_id) REFERENCES live_stm_bus_trip(live_stm_bus_trip_id),
+    FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
+)
 
 -- View for a low key access to the stm_incident table, only showing incidents from the last year
 CREATE OR REPLACE VIEW low_key_access_stm_incident AS
