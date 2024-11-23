@@ -153,3 +153,62 @@ FROM stm_bus_stop_cancelled_moved_relocated;
 -- demonstrating use of null values for undefined / non-applicable
 SELECT * 
 FROM stm_bus_stop sbs LEFT JOIN stm_bus_stop_cancelled_moved_relocated sbsc ON sbs.stm_bus_stop_id = sbsc.stm_bus_stop_id;
+
+-- Using INTERSECT
+SELECT stm_metro_line_id
+FROM stm_incident
+WHERE stm_incident_primary_cause = 'Clientèle'
+INTERSECT
+SELECT stm_metro_line_id
+FROM stm_metro_realized_kilometrage
+WHERE realized_kilometerage > 160;
+
+-- Achieving INTERSECT without using set operations
+SELECT stm_metro_line_id
+FROM stm_incident
+WHERE stm_incident_primary_cause = 'Clientèle'
+AND stm_metro_line_id IN
+(SELECT stm_metro_line_id
+FROM stm_metro_realized_kilometrage
+WHERE realized_kilometerage > 160)
+GROUP BY stm_metro_line_id;
+
+-- Using UNION
+SELECT stm_metro_line_id
+FROM stm_incident
+WHERE stm_incident_primary_cause = 'Clientèle'
+UNION
+SELECT stm_metro_line_id
+FROM stm_metro_realized_kilometrage
+WHERE realized_kilometerage > 160;
+
+-- Achieving UNION without using set operations
+SELECT stm_metro_line_id
+FROM stm_incident
+WHERE stm_incident_primary_cause = 'Clientèle'
+OR stm_metro_line_id IN
+(SELECT stm_metro_line_id
+FROM stm_metro_realized_kilometrage
+WHERE realized_kilometerage > 160)
+GROUP BY stm_metro_line_id
+ORDER BY stm_metro_line_id DESC;
+
+-- Using Differences (EXCEPT)
+SELECT stm_metro_line_id
+FROM stm_incident
+WHERE stm_incident_primary_cause = 'Clientèle'
+EXCEPT
+SELECT stm_metro_line_id
+FROM stm_metro_line
+WHERE line_colour = 'Green';
+
+-- Achieving EXCEPT without using set operations
+SELECT stm_metro_line_id
+FROM stm_incident
+WHERE stm_incident_primary_cause = 'Clientèle'
+AND stm_metro_line_id NOT IN
+(SELECT stm_metro_line_id
+FROM stm_metro_line
+WHERE line_colour = 'Green')
+GROUP BY stm_metro_line_id
+ORDER BY stm_metro_line_id DESC;
