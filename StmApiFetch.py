@@ -50,6 +50,7 @@ with open('stm_response_trips.json', 'r') as file:
     print("hello")
 
     live_trip_id = 1
+    trip_id_set = set()
     for record in stm_response_trips.get("entity", []):
 
         trip_update = record.get("tripUpdate", {})
@@ -59,6 +60,11 @@ with open('stm_response_trips.json', 'r') as file:
         time_of_record = trip_update.get("timestamp")
 
         trip_id = trip.get("trip_id")
+        if trip_id in trip_id_set:
+            print("Duplicate trip ID")
+            break
+        else:
+            trip_id_set.add(trip_id)
         start_date = epoch_to_date(trip.get("startDate"))
         schedule_relationship = trip.get("scheduleRelationship") # Either scheduled or canceled
         route_id = trip.get("routeId")

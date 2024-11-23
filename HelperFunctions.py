@@ -47,12 +47,6 @@ def table_creation():
     -- CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
     -- CREATE TYPE metro_colour AS ENUM ('Green', 'Orange', 'Yellow', 'Blue');
 
-    CREATE TABLE IF NOT EXISTS stm_bus(
-        stm_bus_id INT PRIMARY KEY,
-        stm_bus_number INT NOT NULL CHECK (stm_bus_number > 0),
-        stm_bus_capacity INT NOT NULL CHECK (stm_bus_capacity > 0)
-    );
-
     CREATE TABLE IF NOT EXISTS stm_metro_route(
         stm_metro_route_id INT PRIMARY KEY,
         stm_metro_route_colour metro_colour NOT NULL,
