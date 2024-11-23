@@ -94,20 +94,20 @@ CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
 
 CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
     stm_metro_planned_kilometerage_id INT PRIMARY KEY,
-    stm_metro_line_id INT NOT NULL,
+    stm_metro_route_id INT NOT NULL,
     planned_kilometerage planned_kilometerage NOT NULL,
     day_of_week day_of_week NOT NULL,
     stm_metro_planned_kilometerage_date DATE NOT NULL,
-    FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
 
 CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometrage (
     stm_metro_realized_kilometrage_id INT PRIMARY KEY,
-    stm_metro_line_id INT NOT NULL,
+    stm_metro_route_id INT NOT NULL,
     realized_kilometerage realized_kilometerage NOT NULL,
     day_of_week_or_type_of_day VARCHAR(25) NOT NULL,
     stm_metro_realized_kilometrage_date DATE NOT NULL,
-    FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
 
 CREATE TABLE IF NOT EXISTS stm_incident(
@@ -119,8 +119,8 @@ CREATE TABLE IF NOT EXISTS stm_incident(
     stm_incident_time_of_resolution TIME,
     stm_incident_date_of_incident DATE NOT NULL,
     stm_incident_location_of_incident VARCHAR(255) NOT NULL,
-    stm_metro_line_id INT NOT NULL,
-    FOREIGN KEY (stm_metro_line_id) REFERENCES stm_metro_line(stm_metro_line_id)
+    stm_metro_route_id INT NOT NULL,
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
 
 -- View for a low key access to the stm_incident table, only showing incidents from the last year
