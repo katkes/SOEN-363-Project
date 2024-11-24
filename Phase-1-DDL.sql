@@ -4,24 +4,32 @@ CREATE DOMAIN realized_kilometerage AS INT CHECK (VALUE >= 0);
 CREATE TYPE day_of_week AS ENUM ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 CREATE TYPE metro_colour AS ENUM ('Green', 'Orange', 'Yellow', 'Blue');
 
+-- The stm_route table represents a stm_route entity
+-- A stm_route entity is a representation of a route, like the 123 Dollard bus or the Green line
+-- This table is populated with the content of the routes.txt files from the publically available STM gtfs information
+CREATE TABLE IF NOT EXISTS stm_route(
+    stm_route_id INT PRIMARY KEY,
+    stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
+)
+
 -- The stm_metro_route table represents a stm_metro_route entity
--- A stm_metro_route entity is a representation of a metro route, like the Green line
+-- A stm_metro_route entity is a representation of a metro route, like the Green line, and is a stm_route
 -- Note: A stm_metro_route entity does NOT have direction cardinality, as a metro route can have multiple directions
 -- This table is populated with the content of the routes.txt files from the publically available STM gtfs information
 CREATE TABLE IF NOT EXISTS stm_metro_route(
     stm_metro_route_id INT PRIMARY KEY,
     stm_metro_route_colour metro_colour NOT NULL,
-    stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_route(stm_route_id)
 );
 
 -- The stm_bus_route table represents a stm_bus_route entity
--- A stm_bus_route entity is a representation of a bus route, like the 123 Dollard bus
+-- A stm_bus_route entity is a representation of a bus route, like the 123 Dollard bus, and is a stm_route
 -- Note: A stm_bus_route entity does NOT have direction cardinality, as a bus route can have multiple directions
 -- This table is populated with the content of the routes.txt files from the publically available STM gtfs information
 CREATE TABLE IF NOT EXISTS stm_bus_route(
     stm_bus_route_id INT PRIMARY KEY,
     stm_route_name VARCHAR(255) NOT NULL,
-    stm_route_number INT NOT NULL CHECK (stm_route_number > 0)
+    FOREIGN KEY (stm_bus_route_id) REFERENCES stm_route(stm_route_id)
 );
 
 -- The stm_metro_trip table represents a stm_metro_trip entity
@@ -162,21 +170,27 @@ CREATE TABLE IF NOT EXISTS stm_incident(
     FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
 );
 
-
+-- The live_stm_bus_trip table represents a live_stm_bus_trip entity
+-- A live_stm_bus_trip entity is a representation of a bus trip that is currently in progress
 -- This table is populated with the content of the GTFS-Realtime API provided publicly by the STM
 CREATE TABLE IF NOT EXISTS live_stm_bus_trip(
     live_stm_bus_trip_id INT PRIMARY KEY,
     stm_bus_trip_id INT NOT NULL,
     live_stm_bus_trip_date DATE NOT NULL,
+    FOREIGN KEY (stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id)
 )
 
+-- The live_stm_bus_trip table represents a live_stm_bus_trip_stop entity
+-- A live_stm_bus_trip_stop entity is a representation of a bus stop that a bus trip has visited, is currently at or is scheduled to visit
+-- A live_stm_bus_trip_stop entity has a weak entity relationship with live_stm_bus_trip, where the relationship is "composed of"
 -- This table is populated with the content of the GTFS-Realtime API provided publicly by the STM
 CREATE TABLE IF NOT EXISTS live_stm_bus_trip_stop(
-    live_stm_bus_trip_stop_id INT PRIMARY KEY,
+    live_stm_bus_trip_stop_id INT,
     live_stm_bus_trip_id INT NOT NULL,
     stm_bus_stop_id VARCHAR(15) NOT NULL,
     live_stm_bus_stop_arrival_time TIMESTAMP NOT NULL,
     live_stm_bus_stop_departure_time TIMESTAMP NOT NULL,
+    PRIMARY KEY (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id),
     FOREIGN KEY (live_stm_bus_trip_id) REFERENCES live_stm_bus_trip(live_stm_bus_trip_id),
     FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
 )
