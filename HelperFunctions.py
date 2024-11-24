@@ -187,6 +187,7 @@ def table_creation():
     """
     cursor.execute(create_table_query)
     connection.commit()
+
 def normalize_time(time_str):
     try:
         # Split the time string into hours and minutes
@@ -332,19 +333,19 @@ def fetch_and_create_json_stm_response_json(url):
         else:
             print(f"Error: Received status code {stm_response.status_code} for URL {url}")
 
-def fetch_and_create_ville_de_montreal_json(url):
+def fetch_and_create_ville_de_montreal_json(resource_id):
     number_of_records_per_request = 100
     offset = 0
     ville_de_montreal_base_url = "https://donnees.montreal.ca/api/3/action/datastore_search"
     ville_de_montreal_data = []
 
-    if "518d9c92-89a3-408a-8ac4-04ee43e2ac9e" in url:
+    if "518d9c92-89a3-408a-8ac4-04ee43e2ac9e" in resource_id:
         limit = 17200
         file_name = "incidents_reseau_du_metro_all.json"
-    elif "534cdfd9-41e5-4e11-8675-738485509cce" in url: 
+    elif "534cdfd9-41e5-4e11-8675-738485509cce" in resource_id: 
         limit = 5400
         file_name = "kilometrage_metro_planifie_all.json"
-    elif "c35e14b7-31b7-410d-9773-158bc30749df" in url:
+    elif "c35e14b7-31b7-410d-9773-158bc30749df" in resource_id:
         limit = 31000
         file_name = "kilometrage_metro_realise_all.json"
     else:
@@ -352,7 +353,7 @@ def fetch_and_create_ville_de_montreal_json(url):
         return
     
     while offset != limit:
-        ville_de_montreal_response = requests.get(f"{ville_de_montreal_base_url}?resource_id={url}&limit={number_of_records_per_request}&offset={offset}")
+        ville_de_montreal_response = requests.get(f"{ville_de_montreal_base_url}?resource_id={resource_id}&limit={number_of_records_per_request}&offset={offset}")
         if ville_de_montreal_response.status_code == 200:
             data = ville_de_montreal_response.json()
             records = data.get("result", {}).get("records", [])
