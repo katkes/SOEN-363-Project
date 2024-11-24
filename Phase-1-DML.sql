@@ -1,11 +1,11 @@
--- Task : Basic select with simple where clause.
--- Done : Selects row where stm_bus_code is 54351
+-- Task: Basic select with simple where clause.
+-- Done: Selects row where stm_bus_code is 54351
 SELECT *
 FROM stm_bus_stop_cancelled_moved_relocated
 WHERE stm_bus_stop_code = 54351;
 
--- Task : Basic select with simple group by clause (with and without having clause).
--- Done : Total planned kilometerage for each metro line grouped by day of week
+-- Task: Basic select with simple group by clause (with and without having clause).
+-- Done: Total planned kilometerage for each metro line grouped by day of week
 SELECT 
     stm_metro_line_id,
     day_of_week,
@@ -81,12 +81,6 @@ FULL JOIN
 ON 
     b.stm_bus_stop_code = c.stm_bus_stop_code;
 
-
--- Task: A few queries to demonstrate use of Null values for undefined / non-applicable.
--- Done:
-
-
-
 -- Task: A couple of examples to demonstrate correlated queries.
 -- Done: Display above average kilometrage metro lines using correlated queries
 SELECT 
@@ -101,12 +95,6 @@ WHERE
         FROM stm_metro_planned_kilometerage m2
         WHERE m2.day_of_week = m.day_of_week
     );
-
-
--- Task: One example per set operations: intersect, union, and difference vs. their equivalences
--- Done:
-
-
 
 -- Task: An example of a view that has a hard-coded criteria, by which the content of the view may change upon changing the hard-coded value.
 -- Done: View the incidents on a specific line (Green line) 
@@ -266,3 +254,34 @@ ON
     b.stm_bus_stop_id = c.stm_bus_stop_id
 WHERE 
     c.stm_bus_stop_id IS NULL;
+
+
+-- Done: A regular nested query using NOT IN
+-- All metro lines that have realized kilometerage for all days of the week
+SELECT DISTINCT stm_metro_line_id
+FROM stm_metro_realized_kilometrage r
+WHERE NOT EXISTS (
+    SELECT day_of_week
+    FROM (VALUES ('Monday'), ('Tuesday'), ('Wednesday'), ('Thursday'),
+                 ('Friday'), ('Saturday'), ('Sunday')) AS all_days(day_of_week)
+    WHERE all_days.day_of_week NOT IN (
+        SELECT r_inner.day_of_week_or_type_of_day
+        FROM stm_metro_realized_kilometrage r_inner
+        WHERE r_inner.stm_metro_line_id = r.stm_metro_line_id
+    )
+);
+-- Done: A correlated nested query using NOT EXISTS and EXCEPT
+-- All metro lines that have been in inciddents for all days of the week
+SELECT m.stm_metro_line_id
+FROM stm_metro_line m
+WHERE NOT EXISTS (
+    SELECT *
+    FROM (VALUES ('Monday'), ('Tuesday'), ('Wednesday'), ('Thursday'),
+                 ('Friday'), ('Saturday'), ('Sunday')) AS all_days(day_of_week)
+    EXCEPT
+    SELECT DISTINCT p.day_of_week
+    FROM stm_incident i
+    JOIN stm_metro_planned_kilometerage p
+      ON i.stm_metro_line_id = p.stm_metro_line_id
+    WHERE i.stm_metro_line_id = m.stm_metro_line_id
+);
