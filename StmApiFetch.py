@@ -1,12 +1,13 @@
 import requests
-from HelperFunctions import  epoch_to_date, table_creation, insert_into_stm_stop_line_tables, fetch_and_create_json_stm_response_json, french_english_color_mapping
+from datetime import datetime
+from HelperFunctions import  epoch_to_date, table_creation, insert_into_stm_stop_line_tables, fetch_and_create_json_stm_response_json,epoch_to_timestamp, french_english_color_mapping
 from Creds import connection, stmHeaders
 import json
 
 cursor = connection.cursor()
 
-# table_creation()
-# insert_into_stm_stop_line_tables(cursor)
+table_creation()
+insert_into_stm_stop_line_tables(cursor)
 
 # Fetch and save response for version 1 and 2 of the service status API, as well as live location data into corresponding JSON files
 # TODO: Look into why this doesn't work anymore 
@@ -14,44 +15,52 @@ cursor = connection.cursor()
 # fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v2/messages/etatservice")
 # fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/gtfs-rt/ic/v2/tripUpdates")
 
-# serviceStatusApiUrlV2 = "https://api.stm.info/pub/od/i3/v2/messages/etatservice"
-# stmServiceStatusResponseV2 = requests.get(serviceStatusApiUrlV2, headers=stmHeaders)
+live_trip_id_set = set()
+live_trip_stop_id_set = set()
 
-# stm_bus_stop_cancelled_moved_relocated_id = 1
-# for record in stmServiceStatusResponseV2.json().get("alerts"):
+with open('stm_response_v2.json', 'r') as file:
+    stm_bus_stop_cancelled_moved_relocated_data = json.load(file)
 
-#     description_texts = record.get("description_texts", [])
-#     informed_entities = record.get("informed_entities", [])
-#     active_periods = record.get("active_periods", [])
-#     print(description_texts)
+    stm_bus_stop_cancelled_moved_relocated_id = 1
+    for record in stm_bus_stop_cancelled_moved_relocated_data.get("alerts"):
 
-#     if len(description_texts) > 1 and ("annulés" in description_texts[0].get("text") or "cancelled" in description_texts[1].get("text")) and len(informed_entities) == 3:
-#         stop_code = informed_entities[2].get("stop_code")
-#         reason = description_texts[1].get("text")
+        description_texts = record.get("description_texts", [])
+        informed_entities = record.get("informed_entities", [])
+        active_periods = record.get("active_periods", [])
+        print(description_texts)
 
-#         if active_periods and active_periods.get("start") is not None:
-#             time_of_cancellation = epoch_to_date(active_periods.get("start"))
+        if len(description_texts) > 1 and ("annulés" in description_texts[0].get("text") or "cancelled" in description_texts[1].get("text")) and len(informed_entities) == 3:
+            stop_code = informed_entities[2].get("stop_code")
+            reason = description_texts[1].get("text")
 
-#             cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_code = %s", (stop_code,))
-#             result = cursor.fetchone()
-#             if result:
-#                 stm_bus_stop_id = result[0]
+            if active_periods and active_periods.get("start") is not None:
+                time_of_cancellation = epoch_to_date(active_periods.get("start"))
 
-#                 cursor.execute(
-#                     "INSERT INTO stm_bus_stop_cancelled_moved_relocated (stm_bus_stop_cancelled_moved_relocated_id, stm_bus_stop_id, stm_bus_stop_code, stm_bus_stop_cancelled_moved_relocated_date, stm_bus_stop_cancelled_moved_relocated_reason) VALUES (%s, %s, %s, %s, %s)",
-#                     (stm_bus_stop_cancelled_moved_relocated_id, stm_bus_stop_id, stop_code, time_of_cancellation, reason)
-#                 )
-#                 stm_bus_stop_cancelled_moved_relocated_id += 1
-#             connection.commit()
+                cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_code = %s", (stop_code,))
+                result = cursor.fetchone()
+                if result:
+                    stm_bus_stop_id = result[0]
 
-# TODO: Implement real-time data database implementation
-with open('stm_response_trips.json', 'r') as file:
+                    cursor.execute(
+                        "INSERT INTO stm_bus_stop_cancelled_moved_relocated (stm_bus_stop_cancelled_moved_relocated_id, stm_bus_stop_id, stm_bus_stop_code, stm_bus_stop_cancelled_moved_relocated_date, stm_bus_stop_cancelled_moved_relocated_reason) VALUES (%s, %s, %s, %s, %s)",
+                        (stm_bus_stop_cancelled_moved_relocated_id, stm_bus_stop_id, stop_code, time_of_cancellation, reason)
+                    )
+                    stm_bus_stop_cancelled_moved_relocated_id += 1
+                connection.commit()
+
+with open('stm_response_trips_nov_15.json', 'r') as file:
     stm_response_trips = json.load(file)
-    print("hello")
 
-    live_trip_id = 1
-    trip_id_set = set()
+    
+
     for record in stm_response_trips.get("entity", []):
+        live_trip_id = record.get("id")
+        if not live_trip_id:
+            continue
+        if live_trip_id in live_trip_id_set:
+            continue
+        live_trip_id_set.add(live_trip_id)
+
 
         trip_update = record.get("tripUpdate", {})
 
@@ -59,51 +68,135 @@ with open('stm_response_trips.json', 'r') as file:
         stop_time_updates = trip_update.get("stopTimeUpdate", [])
         time_of_record = trip_update.get("timestamp")
 
-        trip_id = trip.get("trip_id")
-        if trip_id in trip_id_set:
-            print("Duplicate trip ID")
-            break
-        else:
-            trip_id_set.add(trip_id)
-        start_date = epoch_to_date(trip.get("startDate"))
+        trip_id = trip.get("tripId")
+        print(trip_id)
+        if not trip_id:
+            continue
+
+        cursor.execute("SELECT stm_bus_trip_id FROM stm_bus_trip WHERE stm_bus_trip_id = %s", (trip_id,))
+        result_trip_id = cursor.fetchone()
+
+        if not result_trip_id:
+            continue
+
+        combined_date = trip.get("startDate") 
+        combined_date_str = str(combined_date)
+        year = int(combined_date_str[:4])
+        month = int(combined_date_str[4:6])
+        day = int(combined_date_str[6:])
+        trip_date = datetime(year, month, day)
+        
         schedule_relationship = trip.get("scheduleRelationship") # Either scheduled or canceled
-        route_id = trip.get("routeId")
+
+        insert_query = "INSERT INTO live_stm_bus_trip (live_stm_bus_trip_id, stm_bus_trip_id, live_stm_bus_trip_date) VALUES (%s, %s, %s)"
+        cursor.execute(insert_query, (live_trip_id, trip_id, trip_date))
 
         for stop in stop_time_updates:
             stop_sequence = stop.get("stopSequence")
             arrival_time = stop.get("arrival", {}).get("time")
             departure_time = stop.get("departure", {}).get("time")
-
+            schedule_relationship = stop.get("scheduleRelationship")
 
 
             stop_id = stop.get("stopId")
+            if not stop_id:
+                continue
+            if stop_id in live_trip_stop_id_set:
+                continue
+            live_trip_stop_id_set.add(stop_id)
+            cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_id = %s", (stop_id,))
+            result_route_id = cursor.fetchone()
+
+            if not result_route_id:
+                continue
+
+
             arrival = stop.get("arrival", {})
             departure = stop.get("departure", {})
-            arrival_time = epoch_to_date(arrival.get("time")) if arrival.get("time") else None
-            departure_time = epoch_to_date(departure.get("time")) if departure.get("time") else None
+            arrival_time = epoch_to_timestamp(arrival.get("time")) if arrival.get("time") else None
+            departure_time = epoch_to_timestamp(departure.get("time")) if departure.get("time") else None
+            if not arrival_time or not departure_time:
+                continue
 
-            # print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")
+            insert_query = "INSERT INTO live_stm_bus_trip_stop (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id, live_stm_bus_stop_arrival_time, live_stm_bus_stop_departure_time, live_stm_bus_trip_stop_sequence, live_stm_bus_trip_stop_schedule_relationship) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (live_trip_id, trip_id, stop_id, arrival_time, departure_time, stop_sequence, schedule_relationship))
+
+        connection.commit()
+
+with open('stm_response_trips_nov_23.json', 'r') as file:
+    stm_response_trips = json.load(file)
+
+    for record in stm_response_trips.get("entity", []):
+        live_trip_id = record.get("id")
+        if not live_trip_id:
+            continue
+        if live_trip_id in live_trip_id_set:
+            continue
+        live_trip_id_set.add(live_trip_id)
 
 
-        # print(len(record))
-        # print(record)
-        live_trip_update = record.get("tripUpdate", {})
-        trip_id = live_trip_update.get("trip", {}).get("trip_id")
+        trip_update = record.get("tripUpdate", {})
 
-        # print(live_trip_update)
-
-        
-        trip_id = trip_update.get("trip", {}).get("trip_id")
+        trip = trip_update.get("trip", {})
         stop_time_updates = trip_update.get("stopTimeUpdate", [])
-        
-        if not stop_time_updates:
+        time_of_record = trip_update.get("timestamp")
+
+        trip_id = trip.get("tripId")
+        print(trip_id)
+        if not trip_id:
             continue
 
-        for stop_time_update in stop_time_updates:
-            stop_id = stop_time_update.get("stop_id")
-            arrival = stop_time_update.get("arrival", {})
-            departure = stop_time_update.get("departure", {})
-            arrival_time = epoch_to_date(arrival.get("time")) if arrival.get("time") else None
-            departure_time = epoch_to_date(departure.get("time")) if departure.get("time") else None
+        cursor.execute("SELECT stm_bus_trip_id FROM stm_bus_trip WHERE stm_bus_trip_id = %s", (trip_id,))
+        result_trip_id = cursor.fetchone()
 
-            # print(f"Trip ID: {trip_id}, Stop ID: {stop_id}, Arrival Time: {arrival_time}, Departure Time: {departure_time}")
+        if not result_trip_id:
+            continue
+
+        combined_date = trip.get("startDate") 
+        combined_date_str = str(combined_date)
+        year = int(combined_date_str[:4])
+        month = int(combined_date_str[4:6])
+        day = int(combined_date_str[6:])
+        trip_date = datetime(year, month, day)
+        
+        schedule_relationship = trip.get("scheduleRelationship") # Either scheduled or canceled
+
+        insert_query = "INSERT INTO live_stm_bus_trip (live_stm_bus_trip_id, stm_bus_trip_id, live_stm_bus_trip_date) VALUES (%s, %s, %s)"
+        cursor.execute(insert_query, (live_trip_id, trip_id, trip_date))
+
+        for stop in stop_time_updates:
+            stop_sequence = stop.get("stopSequence")
+            arrival_time = stop.get("arrival", {}).get("time")
+            departure_time = stop.get("departure", {}).get("time")
+            schedule_relationship = stop.get("scheduleRelationship")
+
+
+            stop_id = stop.get("stopId")
+            if not stop_id:
+                continue
+            if stop_id in live_trip_stop_id_set:
+                continue
+            live_trip_stop_id_set.add(stop_id)
+            cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_id = %s", (stop_id,))
+            result_route_id = cursor.fetchone()
+
+            if not result_route_id:
+                continue
+
+
+            arrival = stop.get("arrival", {})
+            departure = stop.get("departure", {})
+            arrival_time = epoch_to_timestamp(arrival.get("time")) if arrival.get("time") else None
+            departure_time = epoch_to_timestamp(departure.get("time")) if departure.get("time") else None
+            if not arrival_time or not departure_time:
+                continue
+
+            insert_query = "INSERT INTO live_stm_bus_trip_stop (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id, live_stm_bus_stop_arrival_time, live_stm_bus_stop_departure_time, live_stm_bus_trip_stop_sequence, live_stm_bus_trip_stop_schedule_relationship) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (live_trip_id, trip_id, stop_id, arrival_time, departure_time, stop_sequence, schedule_relationship))
+
+        connection.commit()
+
+
+
+# with open('stm_response_trips.json', 'r') as file:
+#     stm_response_trips = json.load(file)

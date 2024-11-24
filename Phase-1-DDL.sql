@@ -176,9 +176,9 @@ CREATE TABLE IF NOT EXISTS stm_incident(
 CREATE TABLE IF NOT EXISTS live_stm_bus_trip(
     live_stm_bus_trip_id INT PRIMARY KEY,
     stm_bus_trip_id INT NOT NULL,
-    live_stm_bus_trip_date DATE NOT NULL,
+    live_stm_bus_trip_date TIMESTAMP NOT NULL,
     FOREIGN KEY (stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id)
-)
+);
 
 -- The live_stm_bus_trip table represents a live_stm_bus_trip_stop entity
 -- A live_stm_bus_trip_stop entity is a representation of a bus stop that a bus trip has visited, is currently at or is scheduled to visit
@@ -190,10 +190,12 @@ CREATE TABLE IF NOT EXISTS live_stm_bus_trip_stop(
     stm_bus_stop_id VARCHAR(15) NOT NULL,
     live_stm_bus_stop_arrival_time TIMESTAMP NOT NULL,
     live_stm_bus_stop_departure_time TIMESTAMP NOT NULL,
+    live_stm_bus_trip_stop_sequence INT NOT NULL,
+    live_stm_bus_trip_stop_schedule_relationship VARCHAR(255),
     PRIMARY KEY (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id),
     FOREIGN KEY (live_stm_bus_trip_id) REFERENCES live_stm_bus_trip(live_stm_bus_trip_id),
     FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
-)
+);
 
 -- View for a low key access to the stm_incident table, only showing incidents from the last year
 CREATE OR REPLACE VIEW low_key_access_stm_incident AS

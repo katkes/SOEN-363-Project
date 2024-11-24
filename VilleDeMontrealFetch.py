@@ -9,8 +9,8 @@ kilometrage_metro_planifie_resource_id = "534cdfd9-41e5-4e11-8675-738485509cce"
 kilometrage_metro_realise_resource_id = "c35e14b7-31b7-410d-9773-158bc30749df"
 jour_calendaire = "Jour calendaire"
 
-fetch_and_create_ville_de_montreal_json(incidents_reseau_du_metro_resource_id)
-fetch_and_create_ville_de_montreal_json(kilometrage_metro_planifie_resource_id)
+# fetch_and_create_ville_de_montreal_json(incidents_reseau_du_metro_resource_id)
+# fetch_and_create_ville_de_montreal_json(kilometrage_metro_planifie_resource_id)
 # fetch_and_create_ville_de_montreal_json(kilometrage_metro_realise_resource_id)  --> Commented out as it would take too long to run
 
 # Load the realized kilometrage data from made incidents_reseau_du_metro_all.json file
@@ -24,7 +24,7 @@ with open('incidents_reseau_du_metro_all.json', 'r') as file:
         line_id = stm_metro_line_mapping.get(line_name.capitalize())
         incident_time = normalize_time(record.get("Heure de l'incident"))
         incident_resolution_time = normalize_time(record.get("Heure de reprise"))
-        cursor.execute("INSERT INTO stm_incident (stm_incident_id, stm_incident_type, stm_incident_primary_cause, stm_incident_secondary_cause, stm_incident_time_of_incident, stm_incident_time_of_resolution, stm_incident_date_of_incident, stm_incident_location_of_incident, stm_metro_line_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        cursor.execute("INSERT INTO stm_incident (stm_incident_id, stm_incident_type, stm_incident_primary_cause, stm_incident_secondary_cause, stm_incident_time_of_incident, stm_incident_time_of_resolution, stm_incident_date_of_incident, stm_incident_location_of_incident, stm_metro_route_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
                         (record.get("_id"), 
                         record.get("Type d'incident"), 
                         record.get("Cause primaire"), 
@@ -48,7 +48,7 @@ with open('kilometrage_metro_planifie_all.json', 'r') as file:
             continue
         planned_kilometerage_str = record.get("KM planifié", "0").replace(",", ".")
         planned_kilometerage = round(float(planned_kilometerage_str))
-        cursor.execute("INSERT INTO stm_metro_planned_kilometerage (stm_metro_planned_kilometerage_id, stm_metro_line_id, planned_kilometerage, day_of_week, stm_metro_planned_kilometerage_date) VALUES (%s, %s, %s, %s, %s)", 
+        cursor.execute("INSERT INTO stm_metro_planned_kilometerage (stm_metro_planned_kilometerage_id, stm_metro_route_id, planned_kilometerage, day_of_week, stm_metro_planned_kilometerage_date) VALUES (%s, %s, %s, %s, %s)", 
                         (record.get("_id"), 
                         stm_metro_line_mapping.get(record.get("Ligne")), 
                         planned_kilometerage, 
@@ -63,7 +63,7 @@ with open('ConstantInformation/kilometrage_metro_realise_all.json', 'r', encodin
 for record in kilometrage_metro_realise_data:
     realized_kilometerage_str = record.get("Km voiture", "0").replace(",", ".")
     realized_kilometerage = round(float(realized_kilometerage_str))
-    cursor.execute("INSERT INTO stm_metro_realized_kilometerage (stm_metro_realized_kilometerage_id, stm_metro_line_id, realized_kilometerage, day_of_week_or_type_of_day, stm_metro_realized_kilometerage_date) VALUES (%s, %s, %s, %s, %s)", 
+    cursor.execute("INSERT INTO stm_metro_realized_kilometerage (stm_metro_realized_kilometerage_id, stm_metro_route_id, realized_kilometerage, day_of_week_or_type_of_day, stm_metro_realized_kilometerage_date) VALUES (%s, %s, %s, %s, %s)", 
                     (record.get("_id"), 
                     stm_metro_line_mapping.get(record.get("Ligne")), 
                     realized_kilometerage, 
