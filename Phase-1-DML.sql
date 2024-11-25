@@ -4,18 +4,19 @@ SELECT *
 FROM stm_bus_stop_cancelled_moved_relocated
 WHERE stm_bus_stop_code = 54351;
 
--- Task: Basic select with simple group by clause (with and without having clause).
+-- Task: Basic select with simple group by clause (with and without having clause). 
+-- BY TAHSIN
 -- Done: Total planned kilometerage for each metro line grouped by day of week
 SELECT 
-    stm_metro_line_id,
+    stm_metro_route_id,
     day_of_week,
     SUM(planned_kilometerage) AS total_planned_kilometerage
 FROM 
     stm_metro_planned_kilometerage
 GROUP BY 
-    stm_metro_line_id, day_of_week
+    stm_metro_route_id, day_of_week
 ORDER BY 
-    stm_metro_line_id, day_of_week;
+    stm_metro_route_id, day_of_week;
 
 -- Task: A simple join query as well as its equivalent implementation using cartesian product and where clause.
 -- Done: Using simple JOIN
@@ -30,6 +31,7 @@ CROSS JOIN stm_metro_line sl;
 WHERE rk.stm_metro_line_id = sl.stm_metro_line_id;
 
 -- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
+-- BY TAHSIN
 -- Done: Inner join
 SELECT 
     b.stm_bus_stop_id, 
@@ -40,9 +42,10 @@ FROM
 INNER JOIN 
     stm_bus_stop_cancelled_moved_relocated c
 ON 
-    b.stm_bus_stop_code = c.stm_bus_stop_code;
+    b.stm_bus_stop_id = c.stm_bus_stop_id;
 
 -- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
+-- BY TAHSIN
 -- Done: Outer left join
 SELECT 
     b.stm_bus_stop_id, 
@@ -53,7 +56,7 @@ FROM
 LEFT JOIN 
     stm_bus_stop_cancelled_moved_relocated c
 ON 
-    b.stm_bus_stop_code = c.stm_bus_stop_code;
+    b.stm_bus_stop_id = c.stm_bus_stop_id;
 
 -- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
 -- Done: Outer right join
@@ -66,9 +69,10 @@ FROM
 RIGHT JOIN 
     stm_bus_stop_cancelled_moved_relocated c
 ON 
-    b.stm_bus_stop_code = c.stm_bus_stop_code;
+b.stm_bus_stop_id = c.stm_bus_stop_id;
     
 -- Task: A few queries to demonstrate various join types on the same tables: inner vs. outer (left and right) vs. full join. Use of null values in the database to show the differences is required.
+-- BY TAHSIN
 -- Done: Full outer 
 SELECT 
     b.stm_bus_stop_id, 
@@ -79,12 +83,13 @@ FROM
 FULL JOIN 
     stm_bus_stop_cancelled_moved_relocated c
 ON 
-    b.stm_bus_stop_code = c.stm_bus_stop_code;
+    b.stm_bus_stop_id = c.stm_bus_stop_id;
 
 -- Task: A couple of examples to demonstrate correlated queries.
+-- BY TAHSIN
 -- Done: Display above average kilometrage metro lines using correlated queries
 SELECT 
-    m.stm_metro_line_id,
+    m.stm_metro_route_id,
     m.planned_kilometerage,
     m.day_of_week
 FROM 
@@ -97,6 +102,7 @@ WHERE
     );
 
 -- Task: An example of a view that has a hard-coded criteria, by which the content of the view may change upon changing the hard-coded value.
+-- BY TAHSIN
 -- Done: View the incidents on a specific line (Green line) 
 CREATE OR REPLACE VIEW green_line_incidents AS
 SELECT 
@@ -107,26 +113,30 @@ SELECT
 FROM 
     stm_incident i
 JOIN 
-    stm_metro_line m
+    stm_metro_route m
 ON 
-    i.stm_metro_line_id = m.stm_metro_line_id
+    i.stm_metro_route_id = m.stm_metro_route_id
 WHERE 
-    m.line_colour = 'Green';
+    m.stm_metro_route_colour = 'Green';
 
 
 --bus stops with more than one planned kilometerage entry
+-- BY TAHSIN
 SELECT 
-    p.stm_metro_line_id
+    p.stm_metro_route_id
 FROM 
     stm_metro_planned_kilometerage p
 WHERE 
     (SELECT COUNT(*)
      FROM stm_metro_planned_kilometerage p2
-     WHERE p2.stm_metro_line_id = p.stm_metro_line_id) > 1;
+     WHERE p2.stm_metro_route_id = p.stm_metro_route_id) > 1
+GROUP BY
+    p.stm_metro_route_id;
 
 --metro lines with planned kilometerage above the line average
+-- BY TAHSIN
 SELECT 
-    p.stm_metro_line_id,
+    p.stm_metro_route_id,  
     p.planned_kilometerage
 FROM 
     stm_metro_planned_kilometerage p
@@ -134,35 +144,45 @@ WHERE
     p.planned_kilometerage > (
         SELECT AVG(p2.planned_kilometerage)
         FROM stm_metro_planned_kilometerage p2
-        WHERE p2.stm_metro_line_id = p.stm_metro_line_id
+        WHERE p2.stm_metro_route_id = p.stm_metro_route_id 
     );
 
 
 -- Task: Two implementations of the division operator using a) a regular nested query using NOT IN and b) a correlated nested query using NOT EXISTS and EXCEPT
--- Done: Bus stops with no cancellation or relocation (USING NOT IN)
-SELECT stm_bus_stop_id
-FROM stm_bus_stop
-WHERE stm_bus_stop_id NOT IN (
-    SELECT stm_bus_stop_id
-    FROM stm_bus_stop_cancelled_moved_relocated
-);
-
-
---using NOT EXISTS
-SELECT stm_bus_stop_id
-FROM stm_bus_stop bs
+-- Done: A regular nested query using NOT IN
+-- BY TAHSIN
+-- Selects distinct metro routes that have records for every day of the week (Monday to Sunday) in the realized kilometerage data.
+SELECT DISTINCT r.stm_metro_route_id
+FROM stm_metro_realized_kilometrage r
 WHERE NOT EXISTS (
     SELECT 1
-    FROM stm_bus_stop_cancelled_moved_relocated bsc
-    WHERE bs.stm_bus_stop_id = bsc.stm_bus_stop_id
+    FROM (VALUES ('Monday'), ('Tuesday'), ('Wednesday'), ('Thursday'),
+                 ('Friday'), ('Saturday'), ('Sunday')) AS all_days(day_of_week)
+    WHERE all_days.day_of_week NOT IN (
+        SELECT r_inner.day_of_week_or_type_of_day
+        FROM stm_metro_realized_kilometrage r_inner
+        WHERE r_inner.stm_metro_route_id = r.stm_metro_route_id
+    )
 );
 
---using EXCEPT
-SELECT stm_bus_stop_id
-FROM stm_bus_stop
-EXCEPT
-SELECT stm_bus_stop_id
-FROM stm_bus_stop_cancelled_moved_relocated;
+-- Done: A correlated nested query using NOT EXISTS and EXCEPT
+-- BY TAHSIN
+-- Selects metro routes that have incidents and planned kilometerage data for every day of the week (Monday to Sunday).
+SELECT m.stm_metro_route_id
+FROM stm_metro_route m
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM (VALUES ('Monday'), ('Tuesday'), ('Wednesday'), ('Thursday'),
+                 ('Friday'), ('Saturday'), ('Sunday')) AS all_days(day_of_week)
+    EXCEPT
+    SELECT DISTINCT p.day_of_week
+    FROM stm_incident i
+    JOIN stm_metro_planned_kilometerage p
+      ON i.stm_metro_route_id = p.stm_metro_route_id
+    WHERE i.stm_metro_route_id = m.stm_metro_route_id
+    AND p.day_of_week = all_days.day_of_week
+);
+
 
 -- demonstrating use of null values for undefined / non-applicable
 SELECT * 
@@ -254,34 +274,3 @@ ON
     b.stm_bus_stop_id = c.stm_bus_stop_id
 WHERE 
     c.stm_bus_stop_id IS NULL;
-
-
--- Done: A regular nested query using NOT IN
--- All metro lines that have realized kilometerage for all days of the week
-SELECT DISTINCT stm_metro_line_id
-FROM stm_metro_realized_kilometrage r
-WHERE NOT EXISTS (
-    SELECT day_of_week
-    FROM (VALUES ('Monday'), ('Tuesday'), ('Wednesday'), ('Thursday'),
-                 ('Friday'), ('Saturday'), ('Sunday')) AS all_days(day_of_week)
-    WHERE all_days.day_of_week NOT IN (
-        SELECT r_inner.day_of_week_or_type_of_day
-        FROM stm_metro_realized_kilometrage r_inner
-        WHERE r_inner.stm_metro_line_id = r.stm_metro_line_id
-    )
-);
--- Done: A correlated nested query using NOT EXISTS and EXCEPT
--- All metro lines that have been in inciddents for all days of the week
-SELECT m.stm_metro_line_id
-FROM stm_metro_line m
-WHERE NOT EXISTS (
-    SELECT *
-    FROM (VALUES ('Monday'), ('Tuesday'), ('Wednesday'), ('Thursday'),
-                 ('Friday'), ('Saturday'), ('Sunday')) AS all_days(day_of_week)
-    EXCEPT
-    SELECT DISTINCT p.day_of_week
-    FROM stm_incident i
-    JOIN stm_metro_planned_kilometerage p
-      ON i.stm_metro_line_id = p.stm_metro_line_id
-    WHERE i.stm_metro_line_id = m.stm_metro_line_id
-);
