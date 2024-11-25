@@ -5,13 +5,13 @@ import json
 
 cursor = connection.cursor()
 
-# table_creation()
-# insert_into_stm_stop_line_tables(cursor)
+table_creation()
+insert_into_stm_stop_line_tables(cursor)
 
-# # Fetch and save response for version 2 of the service status API, as well as live location data into corresponding JSON files
-# # fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v1/messages/etatservice")
-# fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v2/messages/etatservice")
-# fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/gtfs-rt/ic/v2/tripUpdates")
+# Fetch and save response for version 2 of the service status API, as well as live location data into corresponding JSON files
+# fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v1/messages/etatservice")
+fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v2/messages/etatservice")
+fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/gtfs-rt/ic/v2/tripUpdates")
 
 live_trip_id_set = set()
 live_trip_stop_id_set = set()
