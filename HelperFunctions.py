@@ -293,7 +293,7 @@ def extract_line_name(line_string):
     
 def epoch_to_date(epoch):
     epoch = int(epoch)
-    return datetime.fromtimestamp(epoch).strftime('%m-%d-%Y')
+    return datetime.fromtimestamp(epoch).strftime('%Y-%m-%d')
 
 def epoch_to_timestamp(epoch):
     try:
