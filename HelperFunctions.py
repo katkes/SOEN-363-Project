@@ -399,6 +399,7 @@ def insert_into_stm_stop_line_tables(cursor):
 
 def fetch_and_create_json_stm_response_json(url):
     stm_response = requests.get(url, headers=stmHeaders)
+    stm_live_trip_dates = "stm_live_trip_dates.txt"
     if "gtfs-rt" in url:
        if stm_response.status_code == 200:
             try:
@@ -421,11 +422,11 @@ def fetch_and_create_json_stm_response_json(url):
                 # Full path to the file
                 filepath = os.path.join(directory, filename)
                 
-                # Check if the file already exists and is listed in live_trip_dates.txt
+                # Check if the file already exists and is listed in stm_live_trip_dates.txt
                 file_exists = os.path.exists(filepath)
                 file_listed = False
-                if os.path.exists('live_trip_dates.txt'):
-                    with open('live_trip_dates.txt', 'r') as date_file:
+                if os.path.exists(stm_live_trip_dates):
+                    with open(stm_live_trip_dates, 'r') as date_file:
                         file_listed = filepath in date_file.read().splitlines()
                 
                 if not file_exists or not file_listed:
@@ -435,8 +436,8 @@ def fetch_and_create_json_stm_response_json(url):
                     
                     print(f"Protobuf response has been written to {filepath}")
                     
-                    # Write the filename into the live_trip_dates.txt file
-                    with open('live_trip_dates.txt', 'a') as date_file:
+                    # Write the filename into the stm_live_trip_dates.txt file
+                    with open(stm_live_trip_dates, 'a') as date_file:
                         date_file.write(f"{filepath}\n")
                         date_file.close()
                 else:
@@ -492,3 +493,60 @@ def fetch_and_create_ville_de_montreal_json(resource_id):
         with open(file_name, 'w') as json_file:
             json.dump(ville_de_montreal_data, json_file, indent=4)
             print(f"All data has been written to {file_name}")
+
+
+def fetch_and_create_json_mta_response_json(line_letters):
+    
+    if line_letters == "":
+        url = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs"
+    else:
+        base_url = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-"
+        url = base_url + line_letters
+
+    mta_response = requests.get(url)
+    mta_live_trip_dates = "mta_live_trip_dates.txt"
+    if mta_response.status_code == 200:
+        try:
+            # Parse the Protobuf data from the response content
+            trip_updates = gtfs_pb2.FeedMessage()
+            trip_updates.ParseFromString(mta_response.content)
+            
+            # Convert the Protobuf message to JSON
+            json_trip_updates = MessageToJson(trip_updates)
+
+            # Generate the filename based on the current month and date
+            current_date = datetime.now()
+            filename = f"mta_response_trips_{current_date.month}_{current_date.day}.json"
+         
+            # Ensure the LiveInformation directory exists
+            directory = "LiveInformation"
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+
+            # Full path to the file
+            filepath = os.path.join(directory, filename)
+
+            # Check if the file already exists and is listed in mta_live_trip_dates.txt
+            file_exists = os.path.exists(filepath)
+            file_listed = False
+            if os.path.exists(mta_live_trip_dates):
+                with open(mta_live_trip_dates, 'r') as date_file:
+                    file_listed = filepath in date_file.read().splitlines()
+            
+            if not file_exists or not file_listed:
+                # Write the JSON data to the generated filename in the LiveInformation directory
+                with open(filepath, 'w') as json_file:
+                    json.dump(json.loads(json_trip_updates), json_file, indent=4)
+                
+                print(f"Protobuf response has been written to {filepath}")
+                
+                # Write the filename into the mta_live_trip_dates.txt file
+                with open(mta_live_trip_dates, 'a') as date_file:
+                    date_file.write(f"{filepath}\n")
+                    date_file.close()
+            else:
+                print(f"File {filepath} already exists and is listed in {mta_live_trip_dates}. Skipping write.")
+
+
+        except Exception as e:
+                print(f"Error: {e}")

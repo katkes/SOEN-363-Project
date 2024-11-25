@@ -197,6 +197,9 @@ CREATE TABLE IF NOT EXISTS live_stm_bus_trip_stop(
     FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
 );
 
+
+
+
 -- View for a low key access to the stm_incident table, only showing incidents from the last year
 CREATE OR REPLACE VIEW low_key_access_stm_incident AS
 SELECT stm_incident_id, stm_incident_type, stm_incident_date_of_incident, stm_incident_location_of_incident
