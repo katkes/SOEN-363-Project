@@ -242,6 +242,44 @@ def table_creation():
         FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
     );
 
+    CREATE TABLE IF NOT EXISTS mta_metro_route(
+        mta_metro_route_id  VARCHAR(25) PRIMARY KEY,
+        mta_metro_short_name VARCHAR(255) NOT NULL,
+        mta_metro_long_name VARCHAR(255) NOT NULL,
+        mta_metro_route_type INT NOT NULL,
+        mta_metro_route_desc TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS mta_metro_stop(
+        mta_metro_stop_id VARCHAR(15) PRIMARY KEY,
+        mta_metro_stop_name VARCHAR(255) NOT NULL,
+        mta_metro_stop_latitude DECIMAL(9, 6) NOT NULL,
+        mta_metro_stop_longitude DECIMAL(9, 6) NOT NULL,
+        mta_metro_stop_location_type VARCHAR(255) NOT NULL,
+        mta_metro_parent_stop VARCHAR(15),
+        FOREIGN KEY (mta_metro_parent_stop) REFERENCES mta_metro_stop(mta_metro_stop_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS mta_metro_trip(
+        mta_metro_trip_id VARCHAR(255) PRIMARY KEY,
+        mta_metro_route_id VARCHAR(25) NOT NULL,
+        mta_metro_service_id VARCHAR(255) NOT NULL,
+        mta_metro_trip_headsign VARCHAR(255) NOT NULL,
+        mta_metro_direction_id INT NOT NULL,
+        FOREIGN KEY (mta_metro_route_id) REFERENCES mta_metro_route(mta_metro_route_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS DROP(
+        mta_metro_stop_time_id INT PRIMARY KEY,
+        mta_metro_stop_time_trip_id VARCHAR(255) NOT NULL,
+        mta_metro_stop_time_stop_id VARCHAR(15) NOT NULL,
+        mta_metro_stop_time_stop_sequence INT NOT NULL,
+        mta_metro_stop_arrival_time TIME NOT NULL,
+        mta_metro_stop_departure_time TIME NOT NULL,
+        FOREIGN KEY (mta_metro_stop_time_trip_id) REFERENCES mta_metro_trip(mta_metro_trip_id),
+        FOREIGN KEY (mta_metro_stop_time_stop_id) REFERENCES mta_metro_stop(mta_metro_stop_id)
+    );
+
     -- View for a low key access to the stm_incident table, only showing incidents from the last year
     CREATE OR REPLACE VIEW low_key_access_stm_incident AS
     SELECT stm_incident_id, stm_incident_type, stm_incident_date_of_incident, stm_incident_location_of_incident
@@ -280,9 +318,18 @@ def normalize_time(time_str):
         # Create a datetime object with the normalized time
         time_obj = datetime.strptime(f"{hours:02}:{minutes:02}", "%H:%M")
         return time_obj.strftime("%H:%M")
+    
+    # Handle invalid time format, might have seconds
     except ValueError:
+        try:
+            hours, minutes, seconds = map(int, time_str.split(':'))
+            if hours >= 24:
+                hours -= 24
+            time_obj = datetime.strptime(f"{hours:02}:{minutes:02}:{seconds:02}", "%H:%M:%S")
+            return time_obj.strftime("%H:%M:%S")
         # Handle invalid time format
-        return None
+        except ValueError:
+            return None
 
 def extract_line_name(line_string):
     parts = line_string.split(" - ")
@@ -371,13 +418,14 @@ def insert_into_stm_stop_line_tables(cursor):
         csv_reader = csv.DictReader(csv_file)
         stop_time_id = 1
         for row in csv_reader:
+            if stop_time_id == 580141:
+                break
+
             trip_id = row['trip_id']
             stop_id = row['stop_id']
             stop_sequence = row['stop_sequence']
             arrival_time = normalize_time(row['arrival_time'])
             departure_time = normalize_time(row['departure_time'])
-            if arrival_time is None or departure_time is None:
-                continue # TODO: fix overflow of time, currently ignoring invalid time entries
 
             cursor.execute("SELECT stm_bus_trip_id FROM stm_bus_trip WHERE stm_bus_trip_id = %s", (trip_id, ))
             result_trip = cursor.fetchone()
@@ -391,11 +439,95 @@ def insert_into_stm_stop_line_tables(cursor):
                 insert_query = "INSERT INTO stm_metro_stop_time (stm_metro_stop_time_id, stm_metro_stop_time_trip_id, stm_metro_stop_time_stop_id, stm_metro_stop_time_stop_sequence, stm_metro_stop_arrival_time, stm_metro_stop_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
 
             cursor.execute(insert_query, (stop_time_id, trip_id, stop_id, stop_sequence, arrival_time, departure_time))
+            print("Added record number ", stop_time_id)
             stop_time_id += 1
-        
-    connection.commit()
+            connection.commit()
 
     print("Data inserted into stm_metro_stop_time and stm_bus_stop_time tables")
+
+def insert_into_mta_stop_line_tables(cursor):
+    # Insert data into the mta_metro_line and mta_bus_line tables
+    with open('ConstantInformation/gtfs_mta/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            print(row)
+            print()
+            route_id = row['route_id']
+            route_short_name = row['route_short_name']
+            route_long_name = row['route_long_name']
+            route_type = row['route_type']
+            route_desc = row['route_desc']
+
+            insert_query = "INSERT INTO mta_metro_route (mta_metro_route_id, mta_metro_short_name, mta_metro_long_name, mta_metro_route_type, mta_metro_route_desc) VALUES (%s, %s, %s, %s, %s);"
+            cursor.execute(insert_query, (route_id, route_short_name, route_long_name, route_type, route_desc))
+
+    print("Data inserted into mta_metro_line table")
+    
+    # Insert data into the mta_metro_stop table
+    with open('ConstantInformation/gtfs_mta/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            stop_id = row['stop_id']
+            stop_name = row['stop_name']
+            stop_latitude = row['stop_lat']
+            stop_longitude = row['stop_lon']
+            location_type = row['location_type']
+            if not location_type:
+                location_type = 2
+            else:
+                location_type = location_type_mapping.get(int(location_type))
+            parent_station = row['parent_station']
+
+            try:
+                if parent_station:
+                    cursor.execute("SELECT mta_metro_stop_id FROM mta_metro_stop WHERE mta_metro_stop_id = %s", (parent_station,))
+                result_parent = cursor.fetchone()
+                if not result_parent:
+                    parent_station = None  # Set to None if parent_station does not exist
+
+            except Exception as e:
+                parent_station = None
+
+            insert_query = "INSERT INTO mta_metro_stop (mta_metro_stop_id, mta_metro_stop_name, mta_metro_stop_latitude, mta_metro_stop_longitude, mta_metro_stop_location_type, mta_metro_parent_stop) VALUES (%s, %s, %s, %s, %s, %s);"
+            cursor.execute(insert_query, (stop_id, stop_name, stop_latitude, stop_longitude, location_type, parent_station))
+
+    print("Data inserted into mta_metro_stop table")
+
+
+    # Insert data into the mta_metro_trip table
+    with open('ConstantInformation/gtfs_mta/trips.txt', mode='r', encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for row in csv_reader:
+            trip_id = row['trip_id']
+            route_id = row['route_id']
+            service_id = row['service_id']
+            trip_headsign = row['trip_headsign']
+            direction_id = row['direction_id']
+
+            insert_query = "INSERT INTO mta_metro_trip (mta_metro_trip_id, mta_metro_route_id, mta_metro_service_id, mta_metro_trip_headsign, mta_metro_direction_id) VALUES (%s, %s, %s, %s, %s);"
+            cursor.execute(insert_query, (trip_id, route_id, service_id, trip_headsign, direction_id))
+
+    print("Data inserted into mta_metro_trip table")
+
+    # Insert data into the mta_metro_stop_time table
+    with open('ConstantInformation/gtfs_mta/stop_times.txt', mode='r', encoding='utf-8-sig') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        stop_time_id = 1
+        for row in csv_reader:
+            trip_id = row['trip_id']
+            stop_id = row['stop_id']
+            stop_sequence = row['stop_sequence']
+            arrival_time = normalize_time(row['arrival_time'])
+            departure_time = normalize_time(row['departure_time'])
+
+            insert_query = "INSERT INTO mta_metro_stop_time (mta_metro_stop_time_id, mta_metro_stop_time_trip_id, mta_metro_stop_time_stop_id, mta_metro_stop_time_stop_sequence, mta_metro_stop_arrival_time, mta_metro_stop_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
+            cursor.execute(insert_query, (stop_time_id, trip_id, stop_id, stop_sequence, arrival_time, departure_time))
+            connection.commit()
+            stop_time_id += 1
+            
+    print("Data inserted into mta_metro_stop_time table")
+            
+                
 
 def fetch_and_create_json_stm_response_json(url):
     stm_response = requests.get(url, headers=stmHeaders)
@@ -499,6 +631,7 @@ def fetch_and_create_json_mta_response_json(line_letters):
     
     if line_letters == "":
         url = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs"
+        line_letters = "numbers"
     else:
         base_url = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-"
         url = base_url + line_letters
@@ -516,7 +649,7 @@ def fetch_and_create_json_mta_response_json(line_letters):
 
             # Generate the filename based on the current month and date
             current_date = datetime.now()
-            filename = f"mta_response_trips_{current_date.month}_{current_date.day}.json"
+            filename = f"mta_response_trips_{current_date.month}_{current_date.day}_{line_letters}.json"
          
             # Ensure the LiveInformation directory exists
             directory = "LiveInformation"

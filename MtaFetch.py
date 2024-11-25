@@ -1,6 +1,0 @@
-from HelperFunctions import fetch_and_create_json_mta_response_json
-
-fetch_and_create_json_mta_response_json("ace")
-fetch_and_create_json_mta_response_json("g")
-fetch_and_create_json_mta_response_json("nqrw")
-fetch_and_create_json_mta_response_json("")

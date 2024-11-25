@@ -192,13 +192,48 @@ CREATE TABLE IF NOT EXISTS live_stm_bus_trip_stop(
     live_stm_bus_stop_departure_time TIMESTAMP NOT NULL,
     live_stm_bus_trip_stop_sequence INT NOT NULL,
     live_stm_bus_trip_stop_schedule_relationship VARCHAR(255),
-    PRIMARY KEY (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id),
+    PRIMARY KEY (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id, live_stm_bus_stop_arrival_time),
     FOREIGN KEY (live_stm_bus_trip_id) REFERENCES live_stm_bus_trip(live_stm_bus_trip_id),
     FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
 );
 
+CREATE TABLE IF NOT EXISTS mta_metro_route(
+    mta_metro_route_id  VARCHAR(25) PRIMARY KEY,
+    mta_metro_short_name VARCHAR(255) NOT NULL,
+    mta_metro_long_name VARCHAR(255) NOT NULL,
+    mta_metro_route_type INT NOT NULL,
+    mta_metro_route_desc TEXT
+);
 
+CREATE TABLE IF NOT EXISTS mta_metro_stop(
+    mta_metro_stop_id VARCHAR(15) PRIMARY KEY,
+    mta_metro_stop_name VARCHAR(255) NOT NULL,
+    mta_metro_stop_latitude DECIMAL(9, 6) NOT NULL,
+    mta_metro_stop_longitude DECIMAL(9, 6) NOT NULL,
+    mta_metro_stop_location_type VARCHAR(255) NOT NULL,
+    mta_metro_parent_stop VARCHAR(15),
+    FOREIGN KEY (mta_metro_parent_stop) REFERENCES mta_metro_stop(mta_metro_stop_id)
+);
 
+CREATE TABLE IF NOT EXISTS mta_metro_trip(
+    mta_metro_trip_id VARCHAR(255) PRIMARY KEY,
+    mta_metro_route_id VARCHAR(25) NOT NULL,
+    mta_metro_service_id VARCHAR(255) NOT NULL,
+    mta_metro_trip_headsign VARCHAR(255) NOT NULL,
+    mta_metro_direction_id INT NOT NULL,
+    FOREIGN KEY (mta_metro_route_id) REFERENCES mta_metro_route(mta_metro_route_id)
+);
+
+CREATE TABLE IF NOT EXISTS mta_metro_stop_time(
+    mta_metro_stop_time_id INT PRIMARY KEY,
+    mta_metro_stop_time_trip_id VARCHAR(255) NOT NULL,
+    mta_metro_stop_time_stop_id VARCHAR(15) NOT NULL,
+    mta_metro_stop_time_stop_sequence INT NOT NULL,
+    mta_metro_stop_arrival_time TIME NOT NULL,
+    mta_metro_stop_departure_time TIME NOT NULL,
+    FOREIGN KEY (mta_metro_stop_time_trip_id) REFERENCES mta_metro_trip(mta_metro_trip_id),
+    FOREIGN KEY (mta_metro_stop_time_stop_id) REFERENCES mta_metro_stop(mta_metro_stop_id)
+);
 
 -- View for a low key access to the stm_incident table, only showing incidents from the last year
 CREATE OR REPLACE VIEW low_key_access_stm_incident AS

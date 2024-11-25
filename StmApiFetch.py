@@ -47,9 +47,8 @@ with open('stm_response_v2.json', 'r') as file:
 
 
 
-with open('live_trip_dates.txt', 'r') as date_file:
+with open('stm_live_trip_dates.txt', 'r') as date_file:
     filenames = date_file.read().splitlines()
-
 for filename in filenames:
     if filename == '':
         continue
@@ -103,8 +102,6 @@ for filename in filenames:
                 stop_id = stop.get("stopId")
                 if not stop_id:
                     continue
-                if stop_id in live_trip_stop_id_set:
-                    continue
                 live_trip_stop_id_set.add(stop_id)
                 cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_id = %s", (stop_id,))
                 result_route_id = cursor.fetchone()
@@ -123,7 +120,7 @@ for filename in filenames:
                 insert_query = "INSERT INTO live_stm_bus_trip_stop (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id, live_stm_bus_stop_arrival_time, live_stm_bus_stop_departure_time, live_stm_bus_trip_stop_sequence, live_stm_bus_trip_stop_schedule_relationship) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 cursor.execute(insert_query, (live_trip_id, trip_id, stop_id, arrival_time, departure_time, stop_sequence, schedule_relationship))
 
-            connection.commit()
-            print("Populated live_stm_bus_trip and live_stm_bus_trip_stop tables")
+        connection.commit()
+    print("Populated live_stm_bus_trip and live_stm_bus_trip_stop tables")
 
 connection.close()
