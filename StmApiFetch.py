@@ -55,6 +55,7 @@ for filename in filenames:
     with open(filename, 'r') as file:
         stm_response_trips = json.load(file)
 
+        skipped = 0
         for record in stm_response_trips.get("entity", []):
             live_trip_id = record.get("id")
             if not live_trip_id:
@@ -102,6 +103,8 @@ for filename in filenames:
                 stop_id = stop.get("stopId")
                 if not stop_id:
                     continue
+                if stop_id in live_trip_stop_id_set:
+                    continue
                 live_trip_stop_id_set.add(stop_id)
                 cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_id = %s", (stop_id,))
                 result_route_id = cursor.fetchone()
@@ -121,6 +124,7 @@ for filename in filenames:
                 cursor.execute(insert_query, (live_trip_id, trip_id, stop_id, arrival_time, departure_time, stop_sequence, schedule_relationship))
 
         connection.commit()
+        print("Skipped " + str(skipped) + " records")
     print("Populated live_stm_bus_trip and live_stm_bus_trip_stop tables")
 
 connection.close()

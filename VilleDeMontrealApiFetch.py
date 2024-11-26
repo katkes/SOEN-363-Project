@@ -9,8 +9,8 @@ kilometrage_metro_planifie_resource_id = "534cdfd9-41e5-4e11-8675-738485509cce"
 kilometrage_metro_realise_resource_id = "c35e14b7-31b7-410d-9773-158bc30749df"
 jour_calendaire = "Jour calendaire"
 
-# fetch_and_create_ville_de_montreal_json(incidents_reseau_du_metro_resource_id)
-# fetch_and_create_ville_de_montreal_json(kilometrage_metro_planifie_resource_id)
+fetch_and_create_ville_de_montreal_json(incidents_reseau_du_metro_resource_id)
+fetch_and_create_ville_de_montreal_json(kilometrage_metro_planifie_resource_id)
 # fetch_and_create_ville_de_montreal_json(kilometrage_metro_realise_resource_id)  --> Commented out as it would take too long to run
 
 # Load the realized kilometrage data from made incidents_reseau_du_metro_all.json file

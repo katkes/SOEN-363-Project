@@ -269,7 +269,7 @@ def table_creation():
         FOREIGN KEY (mta_metro_route_id) REFERENCES mta_metro_route(mta_metro_route_id)
     );
 
-    CREATE TABLE IF NOT EXISTS DROP(
+    CREATE TABLE IF NOT EXISTS mta_metro_stop_time(
         mta_metro_stop_time_id INT PRIMARY KEY,
         mta_metro_stop_time_trip_id VARCHAR(255) NOT NULL,
         mta_metro_stop_time_stop_id VARCHAR(15) NOT NULL,
@@ -369,7 +369,8 @@ def insert_into_stm_stop_line_tables(cursor):
                 insert_query = "INSERT INTO stm_bus_route (stm_bus_route_id, stm_route_name) VALUES (%s, %s);"
                 cursor.execute(insert_query, (route_id, line_name))
 
-    print("Data inserted into stm_metro_line and stm_bus_line tables")
+    connection.commit()
+    print("Data inserted into stm_metro_route and stm_bus_route tables")
     
     # Insert data into the stm_metro_stop and stm_bus_stop tables
     with open('ConstantInformation/gtfs_stm/stops.txt', mode='r', encoding='utf-8-sig') as csv_file:
@@ -390,6 +391,7 @@ def insert_into_stm_stop_line_tables(cursor):
            
             cursor.execute(insert_query, (stop_id, stop_name, stop_code, stop_location_type, stop_latitude, stop_longitude, is_wheelchair_accessible))
 
+    connection.commit()
     print("Data inserted into stm_metro_stop and stm_bus_stop tables")
 
     # Insert data into the stm_metro_trip and stm_bus_trip tables
@@ -411,6 +413,7 @@ def insert_into_stm_stop_line_tables(cursor):
                 insert_query = "INSERT INTO stm_metro_trip (stm_metro_trip_id, stm_metro_trip_route_id, stm_metro_trip_service_id, stm_metro_trip_headsign, stm_metro_trip_direction_id) VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(insert_query, (trip_id, route_id, service_id, trip_headsign, direction_id))
     
+    connection.commit()
     print("Data inserted into stm_metro_trip and stm_bus_trip tables")
 
     # Insert data into the stm_metro_stop_time and stm_bus_stop_time tables
@@ -418,8 +421,8 @@ def insert_into_stm_stop_line_tables(cursor):
         csv_reader = csv.DictReader(csv_file)
         stop_time_id = 1
         for row in csv_reader:
-            if stop_time_id == 580141:
-                break
+            if stop_time_id == 1250001: 
+                break 
 
             trip_id = row['trip_id']
             stop_id = row['stop_id']
@@ -527,8 +530,6 @@ def insert_into_mta_stop_line_tables(cursor):
             
     print("Data inserted into mta_metro_stop_time table")
             
-                
-
 def fetch_and_create_json_stm_response_json(url):
     stm_response = requests.get(url, headers=stmHeaders)
     stm_live_trip_dates = "stm_live_trip_dates.txt"
@@ -625,7 +626,6 @@ def fetch_and_create_ville_de_montreal_json(resource_id):
         with open(file_name, 'w') as json_file:
             json.dump(ville_de_montreal_data, json_file, indent=4)
             print(f"All data has been written to {file_name}")
-
 
 def fetch_and_create_json_mta_response_json(line_letters):
     
