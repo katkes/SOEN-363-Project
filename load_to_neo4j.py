@@ -1,8 +1,14 @@
 from neo4j import GraphDatabase
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
+NEO4J_PASS = os.getenv("NEO4J_PASS")
 
 # Neo4j connection details
 neo4j_uri = "bolt://localhost:7687"
-neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=("neo4j", "your_neo4j_password"))
+neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=("neo4j", NEO4J_PASS))
 
 # Function to load CSV data into Neo4j
 def load_csv_to_neo4j(driver, file_name, cypher_query):
@@ -13,10 +19,10 @@ def load_csv_to_neo4j(driver, file_name, cypher_query):
 def load_data():
     # Neo4j Cypher queries to load CSV files
     load_route_query = """
-    LOAD CSV WITH HEADERS FROM 'file:///CSVforNeo4j/stm_route.csv' AS row
+    LOAD CSV WITH HEADERS FROM 'file:///stm_route.csv' AS row
     CREATE (r:Route {id: toInteger(row.stm_route_id), number: toInteger(row.stm_route_number), type: 'bus'})
     """
-    load_csv_to_neo4j(neo4j_driver, "CSVforNeo4j/stm_route.csv", load_route_query)
+    load_csv_to_neo4j(neo4j_driver, "/stm_route.csv", load_route_query)
 
     load_metro_route_query = """
     LOAD CSV WITH HEADERS FROM 'file:///CSVforNeo4j/stm_metro_route.csv' AS row

@@ -1,5 +1,7 @@
-import psycopg2
+import psycopg
 import os
+import pandas as pd
+from sqlalchemy import create_engine
 
 # Define the project folder and CSV directory
 project_folder = os.getcwd()  # This will set the current working directory as the project folder
@@ -10,19 +12,25 @@ if not os.path.exists(csv_directory):
     os.makedirs(csv_directory)
 
 # PostgreSQL connection details
-pg_conn = psycopg2.connect(
-    dbname="soen363project", 
-    user="your_user", 
-    password="your_password", 
-    host="localhost", 
-    port="5432"
+pg_conn = psycopg.connect(
+    host="localhost",
+    dbname="SOEN-363-Project",
+    user="postgres",
+    password="YSU-1231",
+    port=5432
 )
 pg_cursor = pg_conn.cursor()
+conn_engine = "postgresql+psycopg://postgres:YSU-1231@localhost:5432/SOEN-363-Project"
 
 # Export table to CSV from PostgreSQL
 def export_to_csv(query, output_file):
     with open(output_file, "w") as f:
         pg_cursor.copy_expert(f"COPY ({query}) TO STDOUT WITH CSV HEADER", f)
+
+# def export_to_csv(query, output_file):
+#     df = pd.read_sql_query(query, conn_engine, index_col=None)
+#     df.to_csv(output_file)
+#     print(f"{os.path.basename(output_file)} succefully populated.")
 
 # Main function to export data
 def migrate_data():
@@ -109,6 +117,7 @@ def migrate_data():
 def close_connections():
     pg_cursor.close()
     pg_conn.close()
+    # pass
 
 # Run the migration
 if __name__ == "__main__":
