@@ -2,6 +2,10 @@ from neo4j import GraphDatabase
 import os
 from dotenv import load_dotenv
 import csv
+from tqdm import tqdm
+import pandas as pd
+from concurrent.futures import ThreadPoolExecutor
+
 
 
 
@@ -16,6 +20,22 @@ neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=("neo4j", NEO4J_PASS))
 def load_csv_to_neo4j(driver, file_name, cypher_query):
     with driver.session() as session:
         session.run(cypher_query, file=file_name)
+
+# Function to load a segment of CSV data into Neo4j
+def load_segment_to_neo4j(driver, segment, cypher_query):
+    with driver.session() as session:
+        session.run(cypher_query, batch=segment)
+
+# Function to load CSV data into Neo4j in parallel segments
+def load_csv_to_neo4j_in_segments(driver, file_name, cypher_query, num_segments):
+    df = pd.read_csv(file_name)
+    segment_size = len(df) // num_segments
+    segments = [df.iloc[i * segment_size:(i + 1) * segment_size].to_dict(orient='records') for i in range(num_segments)]
+    
+    with ThreadPoolExecutor(max_workers=num_segments) as executor:
+        futures = [executor.submit(load_segment_to_neo4j, driver, segment, cypher_query) for segment in segments]
+        for future in tqdm(futures, desc="Importing data"):
+            future.result()
 
 # Main function to load data from CSV to Neo4j
 def load_data():
@@ -177,29 +197,33 @@ def load_data():
     # load_csv_to_neo4j(neo4j_driver, "./mta_metro_route.csv", load_mta_metro_route_query)
     # print("mta_metro_route.csv completed")
 
-    # load_mta_metro_stop_query = """
-    # LOAD CSV WITH HEADERS FROM 'file:///mta_metro_stop.csv' AS row
-    # CREATE (ms:MTA_MetroStop {id: row.mta_metro_stop_id, name: row.mta_metro_stop_name, lat: toFloat(row.mta_metro_stop_latitude), lon: toFloat(row.mta_metro_stop_longitude)})
-    # """
-    # load_csv_to_neo4j(neo4j_driver, "./mta_metro_stop.csv", load_mta_metro_stop_query)
-    # print("mta_metro_stop.csv completed")
+    load_mta_metro_stop_query = """
+    LOAD CSV WITH HEADERS FROM 'file:///mta_metro_stop.csv' AS row
+    CREATE (ms:MTA_MetroStop {id: row.mta_metro_stop_id, name: row.mta_metro_stop_name, lat: toFloat(row.mta_metro_stop_latitude), lon: toFloat(row.mta_metro_stop_longitude)})
+    """
+    load_csv_to_neo4j(neo4j_driver, "./mta_metro_stop.csv", load_mta_metro_stop_query)
+    print("mta_metro_stop.csv completed")
 
-    # load_mta_metro_trip_query = """
-    # LOAD CSV WITH HEADERS FROM 'file:///mta_metro_trip.csv' AS row
-    # CREATE (mt:MTA_MetroTrip {id: row.mta_metro_trip_id, headsign: row.mta_metro_trip_headsign, direction_id: toInteger(row.mta_metro_direction_id)})
-    # WITH mt, row
-    # MATCH (mr:MTA_MetroRoute {id: row.mta_metro_route_id})
-    # CREATE (mt)-[:FOLLOWS]->(mr)
-    # """
-    # load_csv_to_neo4j(neo4j_driver, "./mta_metro_trip.csv", load_mta_metro_trip_query)
-    # print("mta_metro_trip.csv completed")
+    load_mta_metro_trip_query = """
+    LOAD CSV WITH HEADERS FROM 'file:///mta_metro_trip.csv' AS row
+    CREATE (mt:MTA_MetroTrip {id: row.mta_metro_trip_id, headsign: row.mta_metro_trip_headsign, direction_id: toInteger(row.mta_metro_direction_id)})
+    WITH mt, row
+    MATCH (mr:MTA_MetroRoute {id: row.mta_metro_route_id})
+    CREATE (mt)-[:FOLLOWS]->(mr)
+    """
+    load_csv_to_neo4j(neo4j_driver, "./mta_metro_trip.csv", load_mta_metro_trip_query)
+    print("mta_metro_trip.csv completed")
 
     load_mta_metro_stop_time_query = """
-    LOAD CSV WITH HEADERS FROM 'file:///mta_metro_stop_time.csv' AS row
+    UNWIND $batch AS row
     MATCH (mt:MTA_MetroTrip {id: row.mta_metro_stop_time_trip_id}), (ms:MTA_MetroStop {id: row.mta_metro_stop_time_stop_id})
     CREATE (mt)-[:VISITS {sequence: toInteger(row.mta_metro_stop_time_stop_sequence), arrival_time: row.mta_metro_stop_arrival_time, departure_time: row.mta_metro_stop_departure_time}]->(ms)
     """
-    load_csv_to_neo4j(neo4j_driver, "./mta_metro_stop_time.csv", load_mta_metro_stop_time_query)
+    num_segments = 10  # Adjust the number of segments as needed
+    load_csv_to_neo4j_in_segments(neo4j_driver, "./CSVforNeo4j/mta_metro_stop_time.csv", load_mta_metro_stop_time_query, num_segments)
+    print("mta_metro_stop_time.csv completed")
+
+    print("Data loaded into Neo4j complete!")
     print("line 196")
 
     print("Data loaded into Neo4j complete!")
