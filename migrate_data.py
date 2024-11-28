@@ -15,8 +15,8 @@ if not os.path.exists(csv_directory):
 pg_conn = psycopg.connect(
     host="localhost",
     dbname="SOEN-363-Project",
-    user="postgres",
-    password="YSU-1231",
+    user="",
+    password="",
     port=5432
 )
 pg_cursor = pg_conn.cursor()
