@@ -1,10 +1,6 @@
 from neo4j import GraphDatabase
 import os
 from dotenv import load_dotenv
-import csv
-from tqdm import tqdm
-import pandas as pd
-from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv()
 NEO4J_PASS = os.getenv("NEO4J_PASS")
@@ -17,22 +13,6 @@ neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=("neo4j", NEO4J_PASS))
 def load_csv_to_neo4j(driver, file_name, cypher_query):
     with driver.session() as session:
         session.run(cypher_query, file=file_name)
-
-# Function to load a segment of CSV data into Neo4j
-def load_segment_to_neo4j(driver, segment, cypher_query):
-    with driver.session() as session:
-        session.run(cypher_query, batch=segment)
-
-# Function to load CSV data into Neo4j in parallel segments
-def load_csv_to_neo4j_in_segments(driver, file_name, cypher_query, num_segments):
-    df = pd.read_csv(file_name)
-    segment_size = len(df) // num_segments
-    segments = [df.iloc[i * segment_size:(i + 1) * segment_size].to_dict(orient='records') for i in range(num_segments)]
-    
-    with ThreadPoolExecutor(max_workers=num_segments) as executor:
-        futures = [executor.submit(load_segment_to_neo4j, driver, segment, cypher_query) for segment in segments]
-        for future in tqdm(futures, desc="Importing data"):
-            future.result()
 
 # Main function to load data from CSV to Neo4j
 def load_data():
