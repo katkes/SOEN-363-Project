@@ -1,4 +1,4 @@
-import psycopg
+import psycopg2 as psycopg
 import os
 import pandas as pd
 from sqlalchemy import create_engine
@@ -24,7 +24,7 @@ pg_conn = psycopg.connect(
     port=5432
 )
 pg_cursor = pg_conn.cursor()
-conn_engine = "postgresql+psycopg://postgres:YSU-1231@localhost:5432/SOEN-363-Project"
+conn_engine = f"postgresql+psycopg://postgres:{POSTGRES_PASS}@localhost:5432/SOEN-363-Project"
 
 # Export table to CSV from PostgreSQL
 def export_to_csv(query, output_file):
@@ -72,8 +72,8 @@ def migrate_data():
     stm_metro_stop_time_file = os.path.join(csv_directory, "stm_metro_stop_time.csv")
     export_to_csv(stm_metro_stop_time_query, stm_metro_stop_time_file)
 
-    # NOTE: This exports all the rows, for the load_to_neo4j script, only keep the first 50 000 rows and delete the rest
-    stm_bus_stop_time_query = "SELECT * FROM stm_bus_stop_time"
+    # Note: The stm_bus_stop_time table has way too many rows, so we limit the query to 25,000 rows
+    stm_bus_stop_time_query = "SELECT * FROM stm_bus_stop_time LIMIT 25000"
     stm_bus_stop_time_file = os.path.join(csv_directory, "stm_bus_stop_time.csv")
     export_to_csv(stm_bus_stop_time_query, stm_bus_stop_time_file)
 
@@ -113,8 +113,8 @@ def migrate_data():
     mta_metro_trip_file = os.path.join(csv_directory, "mta_metro_trip.csv")
     export_to_csv(mta_metro_trip_query, mta_metro_trip_file)
 
-    # NOTE: This export only takes the first 50 000
-    mta_metro_stop_time_query = "SELECT * FROM mta_metro_stop_time LIMIT 50000"
+    # Note: The mta_metro_stop_time table has way too many rows, so we limit the query to 25,000 rows
+    mta_metro_stop_time_query = "SELECT * FROM mta_metro_stop_time LIMIT 25000"
     mta_metro_stop_time_file = os.path.join(csv_directory, "mta_metro_stop_time.csv")
     export_to_csv(mta_metro_stop_time_query, mta_metro_stop_time_file)
 
