@@ -2,6 +2,10 @@ import psycopg
 import os
 import pandas as pd
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
+
+load_dotenv()
+POSTGRES_PASS = os.getenv("POSTGRES_PASS")
 
 # Define the project folder and CSV directory
 project_folder = os.getcwd()  # This will set the current working directory as the project folder
@@ -15,8 +19,8 @@ if not os.path.exists(csv_directory):
 pg_conn = psycopg.connect(
     host="localhost",
     dbname="SOEN-363-Project",
-    user="",
-    password="",
+    user="postgres",
+    password=POSTGRES_PASS,
     port=5432
 )
 pg_cursor = pg_conn.cursor()
@@ -27,6 +31,7 @@ def export_to_csv(query, output_file):
     with open(output_file, "w") as f:
         pg_cursor.copy_expert(f"COPY ({query}) TO STDOUT WITH CSV HEADER", f)
 
+# NOTE: This is for middy to export the db to csv files since psycopg2 doesn't work on my machine and psycopg does not have a .copy_expert() method
 # def export_to_csv(query, output_file):
 #     df = pd.read_sql_query(query, conn_engine, index_col=None)
 #     df.to_csv(output_file)
@@ -67,6 +72,7 @@ def migrate_data():
     stm_metro_stop_time_file = os.path.join(csv_directory, "stm_metro_stop_time.csv")
     export_to_csv(stm_metro_stop_time_query, stm_metro_stop_time_file)
 
+    # NOTE: This exports all the rows, for the load_to_neo4j script, only keep the first 50 000 rows and delete the rest
     stm_bus_stop_time_query = "SELECT * FROM stm_bus_stop_time"
     stm_bus_stop_time_file = os.path.join(csv_directory, "stm_bus_stop_time.csv")
     export_to_csv(stm_bus_stop_time_query, stm_bus_stop_time_file)
@@ -107,7 +113,8 @@ def migrate_data():
     mta_metro_trip_file = os.path.join(csv_directory, "mta_metro_trip.csv")
     export_to_csv(mta_metro_trip_query, mta_metro_trip_file)
 
-    mta_metro_stop_time_query = "SELECT * FROM mta_metro_stop_time"
+    # NOTE: This export only takes the first 50 000
+    mta_metro_stop_time_query = "SELECT * FROM mta_metro_stop_time LIMIT 50000"
     mta_metro_stop_time_file = os.path.join(csv_directory, "mta_metro_stop_time.csv")
     export_to_csv(mta_metro_stop_time_query, mta_metro_stop_time_file)
 
@@ -117,7 +124,6 @@ def migrate_data():
 def close_connections():
     pg_cursor.close()
     pg_conn.close()
-    # pass
 
 # Run the migration
 if __name__ == "__main__":
