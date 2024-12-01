@@ -1,0 +1,212 @@
+,stm_bus_route_id,stm_route_name
+0,10,De Lorimier
+1,11,Parc-du-Mont-Royal / Ridgewood
+2,12,Île-des-Soeurs
+3,13,Christophe-Colomb
+4,14,Atateken
+5,16,Graham
+6,17,Décarie
+7,18,Beaubien
+8,19,Chabanel / Marché Central
+9,22,Notre-Dame
+10,24,Sherbrooke
+11,25,Angus
+12,26,Mercier-Est
+13,27,Boulevard Saint-Joseph
+14,28,Honoré-Beaugrand
+15,29,Rachel
+16,30,Saint-Denis / Saint-Hubert
+17,31,Saint-Denis
+18,32,Lacordaire
+19,33,Langelier
+20,34,Sainte-Catherine
+21,35,Griffintown
+22,36,Monk
+23,37,Jolicoeur
+24,38,De l'Église
+25,39,Des Grandes-Prairies
+26,40,Henri-Bourassa-Est
+27,41,Quartier Saint-Michel / Ahuntsic
+28,43,Monselet
+29,44,Armand-Bombardier
+30,45,Papineau
+31,46,Casgrain
+32,47,Masson
+33,48,Perras
+34,49,Maurice-Duplessis
+35,50,Vieux-Montréal / Vieux-Port
+36,51,Édouard-Montpetit
+37,52,de Liège
+38,54,Charland / Chabanel
+39,55,Boulevard Saint-Laurent
+40,56,Saint-Hubert
+41,57,Charlevoix
+42,61,Wellington
+43,63,Girouard
+44,64,Grenet
+45,66,The Boulevard
+46,67,Saint-Michel
+47,68,Pierrefonds
+48,69,Gouin
+49,70,Bois-Franc
+50,71,Pointe-Saint-Charles
+51,72,Alfred-Nobel
+52,73,Dalton
+53,74,Bridge
+54,80,Avenue du Parc
+55,81,Saint-Jean-Baptiste
+56,85,Hochelaga
+57,86,Pointe-aux-Trembles
+58,90,Saint-Jacques
+59,92,Jean-Talon Ouest
+60,93,Jean-Talon
+61,94,D'Iberville
+62,95,Bélanger
+63,97,Avenue-du-Mont-Royal
+64,99,Villeray
+65,100,Crémazie
+66,101,Saint-Patrick
+67,102,Somerled
+68,103,Monkland
+69,104,Cavendish
+70,105,Sherbrooke
+71,106,Newman
+72,107,Verdun
+73,108,Bannantyne
+74,110,Centrale
+75,112,Airlie
+76,113,Lapierre
+77,114,Angrignon
+78,115,Paré
+79,117,O'Brien
+80,119,Rockland
+81,121,Sauvé / Côte-Vertu
+82,123,Dollard / Shevchenko
+83,124,Victoria
+84,125,Ontario
+85,126,Thimens / Grenet
+86,128,Saint-Laurent
+87,129,Côte-Sainte-Catherine
+88,131,De l'Assomption
+89,135,De l'Esplanade
+90,136,Viau
+91,138,Notre-Dame-de-Grâce
+92,139,Pie-IX
+93,140,Fleury
+94,141,Jean-Talon Est
+95,144,Avenue des Pins
+96,146,Christophe-Colomb / Meilleur
+97,150,René-Lévesque
+98,160,Barclay
+99,161,Van Horne
+100,162,Westminster
+101,164,Dudemaine
+102,165,Côte-des-Neiges
+103,166,Queen-Mary
+104,168,Cité-du-Havre
+105,170,Keller
+106,171,Henri-Bourassa
+107,172,Du Golf
+108,174,Côte-Vertu-Ouest
+109,175,Griffith / Saint-François
+110,176,Berlioz
+111,177,Thimens
+112,179,De l'Acadie
+113,180,De Salaberry
+114,183,Gouin Est
+115,185,Sherbrooke
+116,186,Sherbrooke-Est
+117,187,René-Lévesque
+118,188,Couture
+119,189,Notre-Dame
+120,190,Norman
+121,192,Robert
+122,193,Jarry
+123,195,Dorval / Angrignon
+124,196,Parc-Industriel-Lachine
+125,197,Rosemont
+126,198,Broadway
+127,200,Sainte-Anne-de-Bellevue
+128,201,Saint-Charles / Saint-Jean
+129,202,Dawson
+130,203,Carson
+131,204,Cardinal
+132,205,Gouin
+133,206,Roger-Pilon
+134,207,Jacques-Bizard
+135,208,Brunswick
+136,209,Des Sources
+137,211,Bord-du-Lac
+138,212,Sainte-Anne
+139,213,Parc-Industriel-Saint-Laurent
+140,215,Henri-Bourassa
+141,216,Transcanadienne
+142,217,Anse-à-l'Orme
+143,218,Antoine-Faucon
+144,219,Chemin Sainte-Marie
+145,220,Kieran
+146,225,Hymus
+147,350,Verdun / LaSalle
+148,353,Lacordaire / Maurice-Duplessis
+149,354,Sainte-Anne-de-Bellevue / Centre-ville
+150,355,Pie-IX
+151,356,Lachine / YUL Aéroport / Des Sources
+152,357,Saint-Michel
+153,358,Sainte-Catherine
+154,359,Papineau
+155,360,Avenue des Pins
+156,361,Saint-Denis
+157,362,Hochelaga / Notre-Dame
+158,363,Boulevard Saint-Laurent
+159,364,Sherbrooke / Joseph-Renaud
+160,365,Avenue du Parc
+161,368,Avenue-du-Mont-Royal
+162,369,Côte-des-Neiges
+163,370,Rosemont
+164,371,Décarie
+165,372,Jean-Talon
+166,376,Pierrefonds / Centre-ville
+167,378,Sauvé / YUL Aéroport
+168,380,Henri-Bourassa
+169,382,Pierrefonds / Saint-Charles
+170,401,Express Saint-Charles
+171,405,Express Bord-du-Lac
+172,407,Express Île-Bizard
+173,409,Express Des Sources
+174,410,Express Notre-Dame
+175,411,Express Lionel-Groulx
+176,419,Express John Abbott
+177,420,Express Notre-Dame-de-Grâce
+178,425,Express Anse-à-l'Orme
+179,427,Express Saint-Joseph
+180,428,Express Parcs industriels de l'Est
+181,430,Express Pointe-aux-Trembles
+182,432,Express Lacordaire
+183,439,Express Pie-IX
+184,440,Express Charleroi
+185,444,Express Cégep Marie-Victorin
+186,445,Express Papineau
+187,448,Express Maurice-Duplessis
+188,449,Express Rivière-des-Prairies
+189,460,Express Métropolitaine
+190,465,Express Côte-des-Neiges
+191,467,Express Saint-Michel
+192,468,Express Pierrefonds / Gouin
+193,469,Express Henri-Bourassa
+194,470,Express Pierrefonds
+195,475,Express Dollard-des-Ormeaux
+196,480,Express du Parc
+197,485,Express Antoine-Faucon
+198,486,Express Sherbrooke
+199,487,Express Bout-de-l'Île
+200,491,Express Provost
+201,496,Express Victoria
+202,711,Parc-du-Mont-Royal / Oratoire
+203,747,YUL Aéroport  / Centre-Ville
+204,767,La Ronde / Station Jean-Drapeau
+205,769,La Ronde / Station Papineau
+206,777,Jean-Drapeau / Casino / Bonaventure
+207,811,Navette Services santé
+208,822,Navette Longue-Pointe
+209,872,Île-des-Soeurs
+210,968,Trainbus Roxboro / Côte-Vertu

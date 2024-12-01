@@ -1,0 +1,207 @@
+,stm_metro_stop_id,stm_metro_stop_name,stm_metro_stop_code,stm_metro_stop_location_type,stm_metro_stop_latitude,stm_metro_stop_longitude,stm_metro_stop_is_wheelchair_accessible
+0,STATION_M118,STATION ANGRIGNON,10118,Station,45.446466,-73.603118,True
+1,43-01,Station Angrignon,10118,Station entrance,45.446319,-73.603835,True
+2,STATION_M120,STATION MONK,10120,Station,45.451158,-73.593242,False
+3,42-01,Station Monk - Édicule Nord (B),10120,Station entrance,45.451307,-73.593128,False
+4,42-02,Station Monk - Édicule Sud (A),10120,Station entrance,45.451007,-73.59338,False
+5,STATION_M122,STATION JOLICOEUR,10122,Station,45.45701,-73.581691,True
+6,41-01,Station Jolicoeur,10122,Station entrance,45.456787,-73.582115,True
+7,STATION_M124,STATION VERDUN,10124,Station,45.459441,-73.572021,False
+8,40-01,Station Verdun - Édicule Nord (A),10124,Station entrance,45.459222,-73.571833,False
+9,40-02,Station Verdun - Édicule Sud (B),10124,Station entrance,45.459163,-73.571521,False
+10,STATION_M126,STATION DE L'ÉGLISE,10126,Station,45.461894,-73.567074,False
+11,39-01,Station De l'Église - Édicule Wellington (A),10126,Station entrance,45.461818,-73.567216,False
+12,39-02,Station De l'Église (B),10126,Station entrance,45.462823,-73.565795,False
+13,STATION_M128,STATION LASALLE,10128,Station,45.471063,-73.566267,False
+14,38-01,Station LaSalle,10128,Station entrance,45.470736,-73.566135,False
+15,STATION_M130,STATION CHARLEVOIX,10130,Station,45.478465,-73.569336,False
+16,37-01,Station Charlevoix,10130,Station entrance,45.478318,-73.569349,False
+17,STATION_M132,STATION LIONEL-GROULX,10132,Station,45.482509,-73.58018,True
+18,36-01,Station Lionel-Groulx,10132,Station entrance,45.482878,-73.579601,True
+19,STATION_M134,STATION ATWATER,10134,Station,45.490068,-73.585812,False
+20,35-01,Station Atwater - Édicule De Maisonneuve (A),10134,Station entrance,45.48977,-73.58629,False
+21,35-02,Station Atwater - Édicule Ste-Catherine (B),10134,Station entrance,45.489345,-73.584202,False
+22,STATION_M136,STATION GUY-CONCORDIA,10136,Station,45.49557,-73.57931,False
+23,34-01,Station Guy-Concordia - Édicule Guy (B),10136,Station entrance,45.495678,-73.579056,False
+24,34-02,Station Guy-Concordia - Édicule St-Mathieu (A),10136,Station entrance,45.494521,-73.580755,False
+25,STATION_M138,STATION PEEL,10138,Station,45.500879,-73.574715,False
+26,33-01,Station Peel - Édicule Ouest (A),10138,Station entrance,45.50089,-73.574971,False
+27,33-02,Station Peel - Édicule Metcalfe (C),10138,Station entrance,45.501543,-73.574218,False
+28,33-03,Station Peel - Édicule Peel Est (D),10138,Station entrance,45.501028,-73.574305,False
+29,33-04,Station Peel - Édicule Stanley (B),10138,Station entrance,45.499937,-73.574713,False
+30,STATION_M140,STATION MCGILL,10140,Station,45.504064,-73.571586,True
+31,32-01,Station McGill - Édicule Tour KPMG,10140,Station entrance,45.504117,-73.57131,False
+32,32-02,Station McGill - Édicule Union,10140,Station entrance,45.504802,-73.571143,False
+33,32-03,Station McGill - Édicule Ste-Catherine,10140,Station entrance,45.504705,-73.570872,False
+34,32-04,Station McGill - Édicule Robert-Bourassa,10140,Station entrance,45.504393,-73.572132,False
+35,32-06,Station McGill - Édicule De Maisonneuve,10140,Station entrance,45.503352,-73.572113,False
+36,32-07,Station McGill - Édicule McGill College,10140,Station entrance,45.503365,-73.572397,False
+37,32-08,Station McGill - Édicule De Maisonneuve,10140,Station entrance,45.503503,-73.572264,True
+38,STATION_M142,STATION PLACE DES ARTS,10142,Station,45.50822,-73.568433,True
+39,31-01,Station Place-des-Arts - Édicule Jeanne-Mance (A),10142,Station entrance,45.508211,-73.568122,False
+40,31-02,Station Place-des-Arts - Édicule De Bleury Nord (D),10142,Station entrance,45.507254,-73.569391,True
+41,31-03,Station Place-des-Arts - Édicule De Bleury Sud (C),10142,Station entrance,45.507028,-73.568701,False
+42,31-04,Station Place-des-Arts - Édicule UQAM (B),10142,Station entrance,45.509251,-73.568071,False
+43,STATION_M144,STATION ST-LAURENT,10144,Station,45.511033,-73.564899,False
+44,30-01,Station Saint-Laurent,10144,Station entrance,45.510835,-73.564915,False
+45,STATION_M146,STATION BERRI-UQAM,10146,Station,45.515226,-73.561082,True
+46,11-01,Station Berri-UQAM - Édicule Ste-Catherine (B),10146,Station entrance,45.514851,-73.559654,False
+47,11-02,Station Berri-UQAM - Édicule St-Denis (D),10146,Station entrance,45.514207,-73.561853,True
+48,11-03,Station Berri-UQAM - Édicule Berri (A),10146,Station entrance,45.51498,-73.560861,False
+49,11-04,Station Berri-UQAM - Édicule boul. De Maisonneuve (C),10146,Station entrance,45.51652,-73.55977,False
+50,11-05,Station Berri-UQAM - Édicule Gare d'autocars de Montréal,10146,Station entrance,45.515736,-73.561645,False
+51,STATION_M148,STATION BEAUDRY,10148,Station,45.518831,-73.555837,False
+52,29-01,Station Beaudry,10148,Station entrance,45.518977,-73.55585,False
+53,STATION_M150,STATION PAPINEAU,10150,Station,45.523988,-73.552703,False
+54,28-01,Station Papineau,10150,Station entrance,45.523708,-73.552068,False
+55,STATION_M152,STATION FRONTENAC,10152,Station,45.533504,-73.552196,False
+56,27-01,Station Frontenac,10152,Station entrance,45.533131,-73.552138,False
+57,STATION_M154,STATION PRÉFONTAINE,10154,Station,45.541717,-73.554192,True
+58,26-01,Station Préfontaine - Édicule Hochelaga Sud (A),10154,Station entrance,45.541524,-73.554453,True
+59,26-02,Station Préfontaine - Édicule Hochelaga Nord (B),10154,Station entrance,45.541641,-73.55479,False
+60,STATION_M156,STATION JOLIETTE,10156,Station,45.546832,-73.551391,False
+61,25-01,Station Joliette - Édicule Hochelaga Nord (A),10156,Station entrance,45.54698,-73.55151,False
+62,25-02,Station Joliette - Édicule Hochelaga Sud (B),10156,Station entrance,45.546996,-73.551162,False
+63,STATION_M158,STATION PIE IX,10158,Station,45.553688,-73.551757,True
+64,24-01,Station Pie-IX - Édicule Est (A),10158,Station entrance,45.55392,-73.551831,True
+65,24-02,Station Pie-IX - Édicule Ouest (B),10158,Station entrance,45.553578,-73.551963,True
+66,STATION_M160,STATION VIAU,10160,Station,45.560687,-73.54753,True
+67,23-01,Station Viau,10160,Station entrance,45.560986,-73.547166,True
+68,STATION_M162,STATION DE L'ASSOMPTION,10162,Station,45.569285,-73.547336,False
+69,22-01,Station Assomption,10162,Station entrance,45.569229,-73.546797,False
+70,STATION_M164,STATION CADILLAC,10164,Station,45.576843,-73.54671,False
+71,21-01,Station Cadillac - Édicule Sherbrooke Sud (A),10164,Station entrance,45.577005,-73.54636,False
+72,21-02,Station Cadillac - Édicule Sherbrooke Nord (B),10164,Station entrance,45.576844,-73.546964,False
+73,STATION_M166,STATION LANGELIER,10166,Station,45.582736,-73.543133,False
+74,20-01,Station Langelier - Édicule Sherbrooke Sud,10166,Station entrance,45.582858,-73.542776,False
+75,20-02,Station Langelier - Édicule Langelier Ouest,10166,Station entrance,45.582478,-73.542941,False
+76,20-03,Station Langelier - Édicule Sherbrooke Nord,10166,Station entrance,45.582613,-73.54351,False
+77,STATION_M168,STATION RADISSON,10168,Station,45.589431,-73.539269,False
+78,19-01,Station Radisson - Édicule Sherbrooke Nord (A),10168,Station entrance,45.589306,-73.539571,False
+79,19-02,Station Radisson - Édicule Sherbrooke Sud (B),10168,Station entrance,45.589582,-73.538919,False
+80,19-03,Station Radisson - Terminus Radisson (C),10168,Station entrance,45.589696,-73.539892,False
+81,STATION_M170,STATION HONORÉ-BEAUGRAND,10170,Station,45.596572,-73.535376,True
+82,18-01,Station Honoré-Beaugrand - Édicule Sherbrooke Sud (C),10170,Station entrance,45.596593,-73.53463,False
+83,18-02,Station Honoré-Beaugrand - Édicule Sherbrooke Nord (B),10170,Station entrance,45.596868,-73.535039,False
+84,18-03,Station Honoré-Beaugrand - Édicule Honoré-Beaugrand Nord (A),10170,Station entrance,45.596957,-73.536332,True
+85,STATION_M222,STATION CÔTE-VERTU,10222,Station,45.514237,-73.682757,True
+86,65-01,Station Côte-Vertu - Édicule Mac Donald (C),10222,Station entrance,45.513505,-73.68251,False
+87,65-02,Station Côte-Vertu - Édicule Sud (B),10222,Station entrance,45.513853,-73.682969,False
+88,65-03,Station Côte-Vertu - Édicule Nord (A),10222,Station entrance,45.514222,-73.683087,True
+89,STATION_M224,STATION DU COLLÈGE,10224,Station,45.509258,-73.674796,True
+90,54-01,Station Du Collège - Édicule Cartier (A),10224,Station entrance,45.508851,-73.672546,False
+91,54-02,Station Du Collège (B),10224,Station entrance,45.509446,-73.674781,True
+92,STATION_M228,STATION DE LA SAVANE,10228,Station,45.500051,-73.661538,False
+93,53-01,Station De la Savane,10228,Station entrance,45.50034,-73.661793,False
+94,STATION_M230,STATION NAMUR,10230,Station,45.494643,-73.652828,False
+95,52-01,Station Namur,10230,Station entrance,45.49497,-73.653108,False
+96,STATION_M232,STATION PLAMONDON,10232,Station,45.494644,-73.63826,False
+97,51-01,Station Plamondon (A),10232,Station entrance,45.495412,-73.640883,False
+98,51-02,Station Plamondon - Édicule Van Horne (B),10232,Station entrance,45.494344,-73.637885,False
+99,STATION_M234,STATION CÔTE-STE-CATHERINE,10234,Station,45.492356,-73.6331,False
+100,50-01,Station Côte Sainte-Catherine,10234,Station entrance,45.492385,-73.632837,False
+101,STATION_M236,STATION SNOWDON,10236,Station,45.485433,-73.62773,True
+102,49-01,Station Snowdon,10236,Station entrance,45.485405,-73.627939,True
+103,STATION_M238,STATION VILLA-MARIA,10238,Station,45.479709,-73.619821,True
+104,48-01,Station Villa-Maria,10238,Station entrance,45.479501,-73.619884,True
+105,STATION_M242,STATION VENDÔME,10242,Station,45.474101,-73.603706,True
+106,47-01,Station Vendôme - Édicule Ouest,10242,Station entrance,45.473912,-73.604117,False
+107,47-02,Station Vendôme - Édicule Est,10242,Station entrance,45.474292,-73.603569,True
+108,47-03,Station Vendôme - Édicule CUSM,10242,Station entrance,45.473085,-73.603153,False
+109,47-04,Station Vendôme - Édicule CUSM,10242,Station entrance,45.473407,-73.601792,True
+110,STATION_M244,STATION PLACE ST-HENRI,10244,Station,45.47732,-73.586629,False
+111,46-01,Station Place-Saint-Henri - Édicule St-Ferdinand (A),10244,Station entrance,45.477199,-73.586634,False
+112,46-02,Station Place-Saint-Henri - Édicule St-Jacques Sud (B),10244,Station entrance,45.477533,-73.58571,False
+113,46-03,Station Place-Saint-Henri - Édicule St-Jacques Nord (C),10244,Station entrance,45.477566,-73.586247,False
+114,STATION_M248,STATION GEORGES-VANIER,10248,Station,45.488897,-73.576852,False
+115,17-01,Station Georges-Vanier,10248,Station entrance,45.488953,-73.576446,False
+116,STATION_M250,STATION LUCIEN-L'ALLIER,10250,Station,45.494745,-73.571074,False
+117,16-01,Station Lucien-L'Allier,10250,Station entrance,45.494912,-73.57109,False
+118,STATION_M252,STATION BONAVENTURE,10252,Station,45.498086,-73.567235,True
+119,15-01,Station Bonaventure - Canadiens-de-Montréal (B),10252,Station entrance,45.497315,-73.56901,False
+120,15-02,Station Bonaventure - Édicule De la Cathédrale (A),10252,Station entrance,45.498069,-73.566947,False
+121,15-03,Station Bonaventure - Accès ascenseur 1000 de la Gauchetière,10252,Station entrance,45.498469,-73.566747,True
+122,STATION_M254,STATION SQUARE VICTORIA-OACI,10254,Station,45.501937,-73.563118,False
+123,14-01,Station Square-Victoria-OACI - Édicule Viger (C),10254,Station entrance,45.501498,-73.563703,False
+124,14-02,Station Square-Victoria-OACI - Édicule St-Antoine (A),10254,Station entrance,45.50172,-73.562088,False
+125,14-03,Station Square-Victoria-OACI - Édicule St-Jacques (B),10254,Station entrance,45.501194,-73.560755,False
+126,14-05,Station Square-Victoria-OACI - Édicule Belmont (D),10254,Station entrance,45.502357,-73.565113,False
+127,STATION_M256,STATION PLACE D'ARMES,10256,Station,45.506348,-73.559548,True
+128,13-01,Station Place-d'Armes - Édicule St-Urbain,10256,Station entrance,45.506165,-73.559729,True
+129,13-02,Station Place-d'Armes - Édicule Viger,10256,Station entrance,45.505936,-73.560984,False
+130,STATION_M258,STATION CHAMPS DE MARS,10258,Station,45.510047,-73.556596,True
+131,12-01,Station Champ-de-Mars,10258,Station entrance,45.510192,-73.556331,True
+132,STATION_M262,STATION SHERBROOKE,10262,Station,45.51906,-73.569217,False
+133,10-01,Station Sherbrooke - Édicule Berri Est,10262,Station entrance,45.518901,-73.568524,False
+134,10-02,Station Sherbrooke - Édicule Berri Ouest,10262,Station entrance,45.518334,-73.568208,False
+135,STATION_M264,STATION MONT-ROYAL,10264,Station,45.524931,-73.581959,True
+136,09-01,Station Mont-Royal,10264,Station entrance,45.524556,-73.581766,True
+137,STATION_M266,STATION LAURIER,10266,Station,45.527399,-73.586907,False
+138,08-01,Station Laurier - Édicule St-Joseph/Gilford (A),10266,Station entrance,45.527042,-73.586242,False
+139,08-02,Station Laurier - Édicule avenue Laurier (B),10266,Station entrance,45.5278,-73.588928,False
+140,STATION_M268,STATION ROSEMONT,10268,Station,45.531733,-73.59778,True
+141,07-01,Station Rosemont,10268,Station entrance,45.531284,-73.59783,True
+142,07-02,Station Rosemont - Terminus Rosemont,10268,Station entrance,45.53106,-73.597256,True
+143,STATION_M270,STATION BEAUBIEN,10270,Station,45.535354,-73.604688,False
+144,06-01,Station Beaubien,10270,Station entrance,45.535584,-73.604507,False
+145,STATION_M272,STATION JEAN-TALON,10272,Station,45.539056,-73.613902,True
+146,05-01,Station Jean-Talon - Édicule Sud (C),10272,Station entrance,45.5387,-73.61391,True
+147,05-02,Station Jean-Talon - Plaza St-Hubert (D),10272,Station entrance,45.540261,-73.613168,False
+148,05-03,Station Jean-Talon - Tour Jean-Talon (A),10272,Station entrance,45.539382,-73.613439,False
+149,05-04,Station Jean-Talon - Édicule Nord (B),10272,Station entrance,45.538678,-73.614316,False
+150,STATION_M274,STATION JARRY,10274,Station,45.543191,-73.628765,False
+151,04-01,Station Jarry,10274,Station entrance,45.543421,-73.628529,False
+152,STATION_M276,STATION CRÉMAZIE,10276,Station,45.546082,-73.639052,False
+153,03-01,Station Crémazie - Édicule Crémazie Sud (B),10276,Station entrance,45.545715,-73.638037,False
+154,03-02,Station Crémazie - Terminus Crémazie (A),10276,Station entrance,45.546186,-73.639303,False
+155,03-03,Station Crémazie - Édicule Crémazie Nord (A),10276,Station entrance,45.545968,-73.638776,False
+156,STATION_M278,STATION SAUVÉ,10278,Station,45.550757,-73.656017,False
+157,02-01,Station Sauvé - Édicule Nord (B),10278,Station entrance,45.550713,-73.656464,False
+158,02-02,Station Sauvé - Édicule Sud (A),10278,Station entrance,45.55064,-73.655907,False
+159,STATION_M280,STATION HENRI-BOURASSA,10280,Station,45.555277,-73.668172,True
+160,01-01,Station Henri-Bourassa - Édicule rue Berri (A),10280,Station entrance,45.554247,-73.668486,False
+161,01-03,Station Henri-Bourassa - Édicule Nord (D),10280,Station entrance,45.555607,-73.668225,False
+162,01-04,Station Henri-Bourassa - Édicule Sud (B),10280,Station entrance,45.556122,-73.667407,True
+163,01-05,Station Henri-Bourassa - Henri-Bourassa (C),10280,Station entrance,45.555733,-73.667284,False
+164,STATION_M282,STATION CARTIER,10282,Station,45.559997,-73.68231,True
+165,66-01,Station Cartier - Terminus Cartier (A),10282,Station entrance,45.560398,-73.681899,True
+166,66-02,Station Cartier - Édicule boul. Cartier (B),10282,Station entrance,45.561402,-73.681416,False
+167,STATION_M286,STATION DE LA CONCORDE,10286,Station,45.560698,-73.709389,True
+168,67-01,Station De la Concorde,10286,Station entrance,45.560504,-73.709596,True
+169,STATION_M288,STATION MONTMORENCY,10288,Station,45.558436,-73.722459,True
+170,68-01,Station Montmorency,10288,Station entrance,45.558387,-73.721622,True
+171,STATION_M452,STATION JEAN-DRAPEAU,10452,Station,45.512429,-73.533127,False
+172,45-01,Station Jean-Drapeau,10452,Station entrance,45.512289,-73.533371,False
+173,STATION_M454,STATION LONGUEUIL- U. de SHERBROOKE,10454,Station,45.52489,-73.522098,False
+174,44-01,Station Longueuil–U.-de-Sherbrooke - Édicule Longueuil-U-de-S,10454,Station entrance,45.525191,-73.521961,False
+175,44-02,Station Longueuil–U.-de-Sherbrooke - Édicule Terminus Longueuil,10454,Station entrance,45.524631,-73.521989,False
+176,44-03,Station Longueuil–U.-de-Sherbrooke - Édicule De Sérigny,10454,Station entrance,45.524711,-73.522632,False
+177,STATION_M534,STATION CÔTE-DES-NEIGES,10534,Station,45.496846,-73.623386,False
+178,55-01,Station Côte-des-Neiges - Édicule Ouest (A),10534,Station entrance,45.496306,-73.622534,False
+179,55-02,Station Côte-des-Neiges - Édicule Est (B),10534,Station entrance,45.49676,-73.622937,False
+180,STATION_M536,STATION UNIVERSITÉ DE MONTREAL,10536,Station,45.503188,-73.617699,False
+181,56-01,Station Université-de-Montréal - Édicule Louis-Colin (B),10536,Station entrance,45.502757,-73.618298,False
+182,56-02,Station Université-de-Montréal - Édicule Édouard-Montpetit (A),10536,Station entrance,45.503382,-73.617767,False
+183,56-03,Station Université-de-Montréal (C),10536,Station entrance,45.503582,-73.617256,False
+184,STATION_M538,STATION ÉDOUARD-MONTPETIT,10538,Station,45.50992,-73.612858,False
+185,57-02,Station Édouard-Montpetit - Édicule Vincent-D'Indy (B),10538,Station entrance,45.510155,-73.612554,False
+186,57-03,Station Édouard-Montpetit - Édicule boul. Édouard-Montpetit (A),10538,Station entrance,45.50964,-73.612785,False
+187,STATION_M540,STATION OUTREMONT,10540,Station,45.52037,-73.614976,False
+188,58-01,Station Outremont,10540,Station entrance,45.520103,-73.615099,False
+189,STATION_M542,STATION ACADIE,10542,Station,45.523458,-73.623257,False
+190,59-01,Station Acadie - Édicule Beaumont (A),10542,Station entrance,45.523679,-73.623194,False
+191,59-02,Station Acadie (B),10542,Station entrance,45.523391,-73.623494,False
+192,STATION_M544,STATION  DU PARC,10544,Station,45.530177,-73.624559,False
+193,60-01,Station Parc,10544,Station entrance,45.530223,-73.623932,False
+194,STATION_M546,STATION DE CASTELNAU,10546,Station,45.535437,-73.619873,False
+195,61-01,Station De Castelnau - Édicule St-Laurent Est (B),10546,Station entrance,45.53561,-73.619912,False
+196,61-02,Station De Castelnau - Édicule St-Laurent Ouest (A),10546,Station entrance,45.535217,-73.62,False
+197,STATION_M552,STATION FABRE,10552,Station,45.546753,-73.608106,False
+198,62-01,Station Fabre - Édicule Papineau (A),10552,Station entrance,45.547864,-73.607356,False
+199,62-02,Station Fabre (B),10552,Station entrance,45.546469,-73.608221,False
+200,STATION_M554,STATION IBERVILLE,10554,Station,45.553618,-73.601988,False
+201,63-01,Station D'Iberville - Édicule Iberville (A),10554,Station entrance,45.55377,-73.602081,False
+202,63-02,Station D'Iberville - Édicule Louis-Hébert (B),10554,Station entrance,45.552635,-73.602713,False
+203,STATION_M556,STATION SAINT-MICHEL,10556,Station,45.55956,-73.600002,False
+204,64-01,Station Saint-Michel - Édicule Est (A),10556,Station entrance,45.559694,-73.599833,False
+205,64-02,Station Saint-Michel - Édicule Ouest (B),10556,Station entrance,45.559284,-73.599876,False
