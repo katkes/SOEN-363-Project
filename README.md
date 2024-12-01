@@ -32,3 +32,10 @@ The project requires the following dependencies:
 - `psycopg2`: For connecting to a PostgreSQL database.
 - `protobuf`: For parsing Protobuf data.
 - `google.protobuf.json_format`: For converting Protobuf messages to JSON.
+
+## Report
+[Docs Link](https://docs.google.com/document/d/1iI6DHH9BiiiCHJ30YzzL8wDj_BObIsEIM19i_BdAHso/edit?usp=sharing)
+
+## Slides Presentation
+[Canva Link]
+
