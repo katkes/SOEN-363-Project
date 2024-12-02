@@ -1,22 +1,33 @@
+import psycopg2 as psycopg
+import os
 from datetime import datetime
 from HelperFunctions import  epoch_to_date, table_creation, insert_into_stm_stop_line_tables, fetch_and_create_json_stm_response_json,epoch_to_timestamp, french_english_color_mapping
-from Creds import connection
 import json
+from dotenv import load_dotenv
 
+load_dotenv()
+POSTGRES_PASS = os.getenv("POSTGRES_PASS")
+
+connection = psycopg.connect(
+    host="localhost",
+    dbname="SOEN-363-Project",
+    user="postgres",
+    password=POSTGRES_PASS,
+    port=5432
+)
 cursor = connection.cursor()
 
 table_creation()
 insert_into_stm_stop_line_tables(cursor)
 
 # Fetch and save response for version 2 of the service status API, as well as live location data into corresponding JSON files
-# fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v1/messages/etatservice")
-fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v2/messages/etatservice")
+fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/i3/v2/messages/etatservice") # --> Hardcoding the stm_response_v2_orange_line_down.json file
 fetch_and_create_json_stm_response_json("https://api.stm.info/pub/od/gtfs-rt/ic/v2/tripUpdates")
 
-live_trip_id_set = set()
+trip_id_set = set()
 live_trip_stop_id_set = set()
 
-with open('stm_response_v2.json', 'r') as file:
+with open('stm_response_v2_orange_line_down.json', 'r') as file:
     stm_bus_stop_cancelled_moved_relocated_data = json.load(file)
 
     stm_bus_stop_cancelled_moved_relocated_id = 1
@@ -45,10 +56,9 @@ with open('stm_response_v2.json', 'r') as file:
                 connection.commit()
     print("Populated stm_bus_stop_cancelled_moved_relocated table")
 
-
-
 with open('stm_live_trip_dates.txt', 'r') as date_file:
     filenames = date_file.read().splitlines()
+    live_stm_bus_trip_id = 1
 for filename in filenames:
     if filename == '':
         continue
@@ -57,12 +67,12 @@ for filename in filenames:
 
         skipped = 0
         for record in stm_response_trips.get("entity", []):
-            live_trip_id = record.get("id")
-            if not live_trip_id:
+            trip_id = record.get("id")
+            if not trip_id:
                 continue
-            if live_trip_id in live_trip_id_set:
+            if trip_id in trip_id_set:
                 continue
-            live_trip_id_set.add(live_trip_id)
+            trip_id_set.add(trip_id)
 
 
             trip_update = record.get("tripUpdate", {})
@@ -91,7 +101,7 @@ for filename in filenames:
             schedule_relationship = trip.get("scheduleRelationship") # Either scheduled or canceled
 
             insert_query = "INSERT INTO live_stm_bus_trip (live_stm_bus_trip_id, stm_bus_trip_id, live_stm_bus_trip_date) VALUES (%s, %s, %s)"
-            cursor.execute(insert_query, (live_trip_id, trip_id, trip_date))
+            cursor.execute(insert_query, (live_stm_bus_trip_id, trip_id, trip_date))
 
             for stop in stop_time_updates:
                 stop_sequence = stop.get("stopSequence")
@@ -99,19 +109,20 @@ for filename in filenames:
                 departure_time = stop.get("departure", {}).get("time")
                 schedule_relationship = stop.get("scheduleRelationship")
 
-
                 stop_id = stop.get("stopId")
                 if not stop_id:
+                    skipped += 1
                     continue
                 if stop_id in live_trip_stop_id_set:
+                    skipped += 1
                     continue
                 live_trip_stop_id_set.add(stop_id)
                 cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_id = %s", (stop_id,))
                 result_route_id = cursor.fetchone()
 
                 if not result_route_id:
+                    skipped += 1
                     continue
-
 
                 arrival = stop.get("arrival", {})
                 departure = stop.get("departure", {})
@@ -121,7 +132,9 @@ for filename in filenames:
                     continue
 
                 insert_query = "INSERT INTO live_stm_bus_trip_stop (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id, live_stm_bus_stop_arrival_time, live_stm_bus_stop_departure_time, live_stm_bus_trip_stop_sequence, live_stm_bus_trip_stop_schedule_relationship) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(insert_query, (live_trip_id, trip_id, stop_id, arrival_time, departure_time, stop_sequence, schedule_relationship))
+                cursor.execute(insert_query, (trip_id, trip_id, stop_id, arrival_time, departure_time, stop_sequence, schedule_relationship))
+            
+            live_stm_bus_trip_id += 1   
 
         connection.commit()
         print("Skipped " + str(skipped) + " records")

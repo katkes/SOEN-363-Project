@@ -63,7 +63,7 @@ def table_creation():
     CREATE TABLE IF NOT EXISTS stm_metro_route(
         stm_metro_route_id INT PRIMARY KEY,
         stm_metro_route_colour metro_colour NOT NULL,
-        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_route(stm_route_id)
+        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_route(stm_route_id) ON DELETE CASCADE
     );
 
     -- The stm_bus_route table represents a stm_bus_route entity
@@ -73,7 +73,7 @@ def table_creation():
     CREATE TABLE IF NOT EXISTS stm_bus_route(
         stm_bus_route_id INT PRIMARY KEY,
         stm_route_name VARCHAR(255) NOT NULL,
-        FOREIGN KEY (stm_bus_route_id) REFERENCES stm_route(stm_route_id)
+        FOREIGN KEY (stm_bus_route_id) REFERENCES stm_route(stm_route_id) ON DELETE CASCADE
     );
 
     -- The stm_metro_trip table represents a stm_metro_trip entity
@@ -87,7 +87,7 @@ def table_creation():
         stm_metro_trip_service_id VARCHAR(255) NOT NULL,
         stm_metro_trip_headsign VARCHAR(255) NOT NULL,
         stm_metro_trip_direction_id INT NOT NULL CHECK (stm_metro_trip_direction_id = 0 OR stm_metro_trip_direction_id = 1),
-        FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+        FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
     );
 
     -- The stm_bus_trip table represents a stm_bus_trip entity
@@ -101,14 +101,14 @@ def table_creation():
         stm_bus_trip_service_id VARCHAR(255) NOT NULL,
         stm_bus_trip_headsign VARCHAR(255) NOT NULL,
         stm_bus_trip_direction_id INT NOT NULL CHECK (stm_bus_trip_direction_id = 0 OR stm_bus_trip_direction_id = 1),
-        FOREIGN KEY (stm_bus_trip_route_id) REFERENCES stm_bus_route(stm_bus_route_id)
+        FOREIGN KEY (stm_bus_trip_route_id) REFERENCES stm_bus_route(stm_bus_route_id) ON DELETE CASCADE
     );
 
     -- The stm_bus_stop table represents a stm_bus_stop entity
     -- A stm_bus_stop entity is a representation of a physical bus stop
     -- This table is populated with the content of the stops.txt files from the publically available STM gtfs information
     CREATE TABLE IF NOT EXISTS stm_bus_stop(
-        stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
+        stm_bus_stop_id INT PRIMARY KEY,
         stm_bus_stop_name VARCHAR(255) NOT NULL,
         stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
         stm_bus_stop_location_type VARCHAR(255) NOT NULL,
@@ -142,8 +142,8 @@ def table_creation():
         stm_metro_stop_time_stop_sequence INT NOT NULL,
         stm_metro_stop_arrival_time TIME NOT NULL,
         stm_metro_stop_departure_time TIME NOT NULL,
-        FOREIGN KEY (stm_metro_stop_time_trip_id) REFERENCES stm_metro_trip(stm_metro_trip_id),
-        FOREIGN KEY (stm_metro_stop_time_stop_id) REFERENCES stm_metro_stop(stm_metro_stop_id)
+        FOREIGN KEY (stm_metro_stop_time_trip_id) REFERENCES stm_metro_trip(stm_metro_trip_id) ON DELETE CASCADE,
+        FOREIGN KEY (stm_metro_stop_time_stop_id) REFERENCES stm_metro_stop(stm_metro_stop_id) ON DELETE CASCADE
     );
 
     -- The stm_bus_stop_time table represents a relationship between stm_bus_trip and stm_bus_stop
@@ -153,12 +153,12 @@ def table_creation():
     CREATE TABLE IF NOT EXISTS stm_bus_stop_time(
         stm_bus_stop_time_id INT PRIMARY KEY,
         stm_bus_stop_time_trip_id INT NOT NULL,
-        stm_bus_stop_time_stop_id VARCHAR(15) NOT NULL,
+        stm_bus_stop_time_stop_id INT NOT NULL,
         stm_bus_stop_time_stop_sequence INT NOT NULL,
         stm_bus_stop_arrival_time TIME NOT NULL,
         stm_bus_stop_departure_time TIME NOT NULL,
-        FOREIGN KEY (stm_bus_stop_time_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id),
-        FOREIGN KEY (stm_bus_stop_time_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
+        FOREIGN KEY (stm_bus_stop_time_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id) ON DELETE CASCADE,
+        FOREIGN KEY (stm_bus_stop_time_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
     );
 
     -- The stm_bus_stop_cancelled_moved_relocated table represents a stm_bus_stop_cancelled_moved_relocated entity
@@ -167,7 +167,7 @@ def table_creation():
     -- This table is populated with the content of the etatservice (v2) API provided publicly by the STM
     CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
         stm_bus_stop_cancelled_moved_relocated_id INT PRIMARY KEY,
-        stm_bus_stop_id VARCHAR(15) NOT NULL,
+        stm_bus_stop_id INT NOT NULL,
         stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
         stm_bus_stop_cancelled_moved_relocated_date DATE NOT NULL,
         stm_bus_stop_cancelled_moved_relocated_reason TEXT NOT NULL,
@@ -183,7 +183,7 @@ def table_creation():
         planned_kilometerage planned_kilometerage NOT NULL,
         day_of_week day_of_week NOT NULL,
         stm_metro_planned_kilometerage_date DATE NOT NULL,
-        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
     );
 
     -- The stm_metro_realized_kilometerage table represents a stm_metro_realized_kilometerage entity
@@ -195,9 +195,8 @@ def table_creation():
         realized_kilometerage realized_kilometerage NOT NULL,
         day_of_week_or_type_of_day VARCHAR(25) NOT NULL,
         stm_metro_realized_kilometerage_date DATE NOT NULL,
-        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
     );
-
 
     -- The stm_incident table represents a stm_incident entity
     -- A stm_incident entity is a representation of an incident that has occurred on the STM metro network
@@ -212,7 +211,7 @@ def table_creation():
         stm_incident_date_of_incident DATE NOT NULL,
         stm_incident_location_of_incident VARCHAR(255) NOT NULL,
         stm_metro_route_id INT NOT NULL,
-        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+        FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
     );
 
     -- The live_stm_bus_trip table represents a live_stm_bus_trip entity
@@ -222,7 +221,7 @@ def table_creation():
         live_stm_bus_trip_id INT PRIMARY KEY,
         stm_bus_trip_id INT NOT NULL,
         live_stm_bus_trip_date TIMESTAMP NOT NULL,
-        FOREIGN KEY (stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id)
+        FOREIGN KEY (stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id) ON DELETE CASCADE
     );
 
     -- The live_stm_bus_trip table represents a live_stm_bus_trip_stop entity
@@ -232,14 +231,14 @@ def table_creation():
     CREATE TABLE IF NOT EXISTS live_stm_bus_trip_stop(
         live_stm_bus_trip_stop_id INT,
         live_stm_bus_trip_id INT NOT NULL,
-        stm_bus_stop_id VARCHAR(15) NOT NULL,
+        stm_bus_stop_id INT NOT NULL,
         live_stm_bus_stop_arrival_time TIMESTAMP NOT NULL,
         live_stm_bus_stop_departure_time TIMESTAMP NOT NULL,
         live_stm_bus_trip_stop_sequence INT NOT NULL,
         live_stm_bus_trip_stop_schedule_relationship VARCHAR(255),
-        PRIMARY KEY (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id),
-        FOREIGN KEY (live_stm_bus_trip_id) REFERENCES live_stm_bus_trip(live_stm_bus_trip_id),
-        FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
+        PRIMARY KEY (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id, live_stm_bus_stop_arrival_time),
+        FOREIGN KEY (live_stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id) ON DELETE CASCADE,
+        FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS mta_metro_route(
@@ -257,7 +256,7 @@ def table_creation():
         mta_metro_stop_longitude DECIMAL(9, 6) NOT NULL,
         mta_metro_stop_location_type VARCHAR(255) NOT NULL,
         mta_metro_parent_stop VARCHAR(15),
-        FOREIGN KEY (mta_metro_parent_stop) REFERENCES mta_metro_stop(mta_metro_stop_id)
+        FOREIGN KEY (mta_metro_parent_stop) REFERENCES mta_metro_stop(mta_metro_stop_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS mta_metro_trip(
@@ -266,7 +265,7 @@ def table_creation():
         mta_metro_service_id VARCHAR(255) NOT NULL,
         mta_metro_trip_headsign VARCHAR(255) NOT NULL,
         mta_metro_direction_id INT NOT NULL,
-        FOREIGN KEY (mta_metro_route_id) REFERENCES mta_metro_route(mta_metro_route_id)
+        FOREIGN KEY (mta_metro_route_id) REFERENCES mta_metro_route(mta_metro_route_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS mta_metro_stop_time(
@@ -276,8 +275,8 @@ def table_creation():
         mta_metro_stop_time_stop_sequence INT NOT NULL,
         mta_metro_stop_arrival_time TIME NOT NULL,
         mta_metro_stop_departure_time TIME NOT NULL,
-        FOREIGN KEY (mta_metro_stop_time_trip_id) REFERENCES mta_metro_trip(mta_metro_trip_id),
-        FOREIGN KEY (mta_metro_stop_time_stop_id) REFERENCES mta_metro_stop(mta_metro_stop_id)
+        FOREIGN KEY (mta_metro_stop_time_trip_id) REFERENCES mta_metro_trip(mta_metro_trip_id) ON DELETE CASCADE,
+        FOREIGN KEY (mta_metro_stop_time_stop_id) REFERENCES mta_metro_stop(mta_metro_stop_id) ON DELETE CASCADE
     );
 
     -- View for a low key access to the stm_incident table, only showing incidents from the last year
@@ -294,7 +293,7 @@ def table_creation():
         UPDATE stm_bus_stop
         SET stm_bus_stop_is_active = FALSE
         WHERE stm_bus_stop_code = NEW.stm_bus_stop_code;
-    
+
         RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
@@ -351,6 +350,7 @@ def epoch_to_timestamp(epoch):
 
 
 def insert_into_stm_stop_line_tables(cursor):
+
     # Insert data into the stm_metro_line and stm_bus_line tables
     with open('ConstantInformation/gtfs_stm/routes.txt', mode='r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -397,6 +397,7 @@ def insert_into_stm_stop_line_tables(cursor):
     # Insert data into the stm_metro_trip and stm_bus_trip tables
     with open('ConstantInformation/gtfs_stm/trips.txt', mode='r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
+        row_number = 1
         for row in csv_reader:
             trip_id = row['trip_id']
             route_id = row['route_id']
@@ -412,6 +413,8 @@ def insert_into_stm_stop_line_tables(cursor):
             else:
                 insert_query = "INSERT INTO stm_metro_trip (stm_metro_trip_id, stm_metro_trip_route_id, stm_metro_trip_service_id, stm_metro_trip_headsign, stm_metro_trip_direction_id) VALUES (%s, %s, %s, %s, %s);"
             cursor.execute(insert_query, (trip_id, route_id, service_id, trip_headsign, direction_id))
+            print("Added record number ", row_number)
+            row_number += 1
     
     connection.commit()
     print("Data inserted into stm_metro_trip and stm_bus_trip tables")
@@ -420,8 +423,10 @@ def insert_into_stm_stop_line_tables(cursor):
     with open('ConstantInformation/gtfs_stm/stop_times.txt', mode='r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         stop_time_id = 1
+        row_count = 0
+
         for row in csv_reader:
-            if stop_time_id == 1250001: 
+            if stop_time_id > 1250000: 
                 break 
 
             trip_id = row['trip_id']
@@ -436,12 +441,61 @@ def insert_into_stm_stop_line_tables(cursor):
             cursor.execute("SELECT stm_bus_stop_id FROM stm_bus_stop WHERE stm_bus_stop_code = %s", (stop_id, ))
             result_stop = cursor.fetchone()
 
+            # print("Result stop" , result_stop[0]) 
+            # print("Result trip", result_trip[0])
+
             if result_trip and result_stop:
                 insert_query = "INSERT INTO stm_bus_stop_time (stm_bus_stop_time_id, stm_bus_stop_time_trip_id, stm_bus_stop_time_stop_id, stm_bus_stop_time_stop_sequence, stm_bus_stop_arrival_time, stm_bus_stop_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
-            else:
-                insert_query = "INSERT INTO stm_metro_stop_time (stm_metro_stop_time_id, stm_metro_stop_time_trip_id, stm_metro_stop_time_stop_id, stm_metro_stop_time_stop_sequence, stm_metro_stop_arrival_time, stm_metro_stop_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
+            # else: <-- Temporarily commented out because the first 1250000 records are all bus trips
+            #     insert_query = "INSERT INTO stm_metro_stop_time (stm_metro_stop_time_id, stm_metro_stop_time_trip_id, stm_metro_stop_time_stop_id, stm_metro_stop_time_stop_sequence, stm_metro_stop_arrival_time, stm_metro_stop_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
 
             cursor.execute(insert_query, (stop_time_id, trip_id, stop_id, stop_sequence, arrival_time, departure_time))
+            print("Added record number ", stop_time_id)
+            stop_time_id += 1
+            connection.commit()
+            row_count += 1
+        print("Processed first 25,000 rows")
+
+        # Skip to line 8,807,986 to insert metro stop times
+        while row_count < 8807986:
+            next(csv_reader)
+            row_count += 1
+
+        # Process the next 250,000 rows
+        for row in csv_reader:
+            if stop_time_id > 1500000:
+                break
+
+            trip_id = row['trip_id']
+            stop_id = row['stop_id']
+            # print("Stop id", stop_id)   
+            # print("Trip id", trip_id)
+            stop_sequence = row['stop_sequence']
+            arrival_time = normalize_time(row['arrival_time'])
+            departure_time = normalize_time(row['departure_time'])
+            # print(trip_id)
+            cursor.execute("SELECT stm_metro_trip_id FROM stm_metro_trip WHERE stm_metro_trip_id = %s", (trip_id,))
+            result_trip = cursor.fetchone()
+
+            query = "SELECT stm_metro_stop_id FROM stm_metro_stop WHERE stm_metro_stop_id LIKE %s"
+            trip_id_suffix = '-%1'
+            # print(stop_id + trip_id_suffix)
+            cursor.execute(query, ((stop_id + trip_id_suffix),))
+
+            result_stop = cursor.fetchone()
+            # print("Result stop", result_stop)
+            if result_stop is None or result_trip[0] is None:
+                continue
+            else:
+                result_stop = result_stop[0]
+                # print("Result stop", result_stop[0])
+
+            if result_trip and result_stop:
+                insert_query = "INSERT INTO stm_metro_stop_time (stm_metro_stop_time_id, stm_metro_stop_time_trip_id, stm_metro_stop_time_stop_id, stm_metro_stop_time_stop_sequence, stm_metro_stop_arrival_time, stm_metro_stop_departure_time) VALUES (%s, %s, %s, %s, %s, %s);"
+            else:
+                continue
+            
+            cursor.execute(insert_query, (stop_time_id, trip_id, result_stop, stop_sequence, arrival_time, departure_time))
             print("Added record number ", stop_time_id)
             stop_time_id += 1
             connection.commit()

@@ -1,0 +1,1219 @@
+{
+    "header": {
+        "gtfsRealtimeVersion": "1.0",
+        "timestamp": "1733110369"
+    },
+    "entity": [
+        {
+            "id": "000001SI",
+            "tripUpdate": {
+                "trip": {
+                    "tripId": "132100_SI..N",
+                    "startTime": "22:01:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "stopTimeUpdate": [
+                    {
+                        "arrival": {
+                            "time": "1733110341"
+                        },
+                        "departure": {
+                            "time": "1733110341"
+                        },
+                        "stopId": "S27N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110520"
+                        },
+                        "departure": {
+                            "time": "1733110520"
+                        },
+                        "stopId": "S28N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110640"
+                        },
+                        "departure": {
+                            "time": "1733110640"
+                        },
+                        "stopId": "S29N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110760"
+                        },
+                        "departure": {
+                            "time": "1733110760"
+                        },
+                        "stopId": "S30N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112878"
+                        },
+                        "departure": {
+                            "time": "1733112878"
+                        },
+                        "stopId": "S31N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "000002SI",
+            "vehicle": {
+                "trip": {
+                    "tripId": "132100_SI..N",
+                    "startTime": "22:01:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "currentStopSequence": 16,
+                "currentStatus": "STOPPED_AT",
+                "timestamp": "1733110341",
+                "stopId": "S27N"
+            }
+        },
+        {
+            "id": "000003SI",
+            "tripUpdate": {
+                "trip": {
+                    "tripId": "135100_SI..N",
+                    "startTime": "22:31:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "stopTimeUpdate": [
+                    {
+                        "arrival": {
+                            "time": "1733110466"
+                        },
+                        "departure": {
+                            "time": "1733110466"
+                        },
+                        "stopId": "S11N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110586"
+                        },
+                        "departure": {
+                            "time": "1733110586"
+                        },
+                        "stopId": "S13N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110706"
+                        },
+                        "departure": {
+                            "time": "1733110706"
+                        },
+                        "stopId": "S14N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110826"
+                        },
+                        "departure": {
+                            "time": "1733110826"
+                        },
+                        "stopId": "S15N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110946"
+                        },
+                        "departure": {
+                            "time": "1733110946"
+                        },
+                        "stopId": "S16N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111066"
+                        },
+                        "departure": {
+                            "time": "1733111066"
+                        },
+                        "stopId": "S17N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111186"
+                        },
+                        "departure": {
+                            "time": "1733111186"
+                        },
+                        "stopId": "S18N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111306"
+                        },
+                        "departure": {
+                            "time": "1733111306"
+                        },
+                        "stopId": "S19N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111426"
+                        },
+                        "departure": {
+                            "time": "1733111426"
+                        },
+                        "stopId": "S20N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111546"
+                        },
+                        "departure": {
+                            "time": "1733111546"
+                        },
+                        "stopId": "S21N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111666"
+                        },
+                        "departure": {
+                            "time": "1733111666"
+                        },
+                        "stopId": "S22N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111786"
+                        },
+                        "departure": {
+                            "time": "1733111786"
+                        },
+                        "stopId": "S23N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111846"
+                        },
+                        "departure": {
+                            "time": "1733111846"
+                        },
+                        "stopId": "S24N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111966"
+                        },
+                        "departure": {
+                            "time": "1733111966"
+                        },
+                        "stopId": "S25N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112086"
+                        },
+                        "departure": {
+                            "time": "1733112086"
+                        },
+                        "stopId": "S26N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112206"
+                        },
+                        "departure": {
+                            "time": "1733112206"
+                        },
+                        "stopId": "S27N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112386"
+                        },
+                        "departure": {
+                            "time": "1733112386"
+                        },
+                        "stopId": "S28N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112506"
+                        },
+                        "departure": {
+                            "time": "1733112506"
+                        },
+                        "stopId": "S29N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112626"
+                        },
+                        "departure": {
+                            "time": "1733112626"
+                        },
+                        "stopId": "S30N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112878"
+                        },
+                        "departure": {
+                            "time": "1733112878"
+                        },
+                        "stopId": "S31N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "000004SI",
+            "vehicle": {
+                "trip": {
+                    "tripId": "135100_SI..N",
+                    "startTime": "22:31:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "currentStatus": "STOPPED_AT",
+                "timestamp": "1733110329",
+                "stopId": "S09N"
+            }
+        },
+        {
+            "id": "000005SI",
+            "tripUpdate": {
+                "trip": {
+                    "tripId": "132600_SI..S",
+                    "startTime": "22:06:30",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "stopTimeUpdate": [
+                    {
+                        "arrival": {
+                            "time": "1733110341"
+                        },
+                        "departure": {
+                            "time": "1733110341"
+                        },
+                        "stopId": "S27S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110342"
+                        },
+                        "departure": {
+                            "time": "1733110342"
+                        },
+                        "stopId": "S26S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110343"
+                        },
+                        "departure": {
+                            "time": "1733110343"
+                        },
+                        "stopId": "S25S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110344"
+                        },
+                        "departure": {
+                            "time": "1733110344"
+                        },
+                        "stopId": "S24S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110345"
+                        },
+                        "departure": {
+                            "time": "1733110345"
+                        },
+                        "stopId": "S23S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110346"
+                        },
+                        "departure": {
+                            "time": "1733110346"
+                        },
+                        "stopId": "S22S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110347"
+                        },
+                        "departure": {
+                            "time": "1733110347"
+                        },
+                        "stopId": "S21S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110348"
+                        },
+                        "departure": {
+                            "time": "1733110348"
+                        },
+                        "stopId": "S20S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110349"
+                        },
+                        "departure": {
+                            "time": "1733110349"
+                        },
+                        "stopId": "S19S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110464"
+                        },
+                        "departure": {
+                            "time": "1733110464"
+                        },
+                        "stopId": "S18S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110584"
+                        },
+                        "departure": {
+                            "time": "1733110584"
+                        },
+                        "stopId": "S17S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110704"
+                        },
+                        "departure": {
+                            "time": "1733110704"
+                        },
+                        "stopId": "S16S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110824"
+                        },
+                        "departure": {
+                            "time": "1733110824"
+                        },
+                        "stopId": "S15S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110944"
+                        },
+                        "departure": {
+                            "time": "1733110944"
+                        },
+                        "stopId": "S14S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111064"
+                        },
+                        "departure": {
+                            "time": "1733111064"
+                        },
+                        "stopId": "S13S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111184"
+                        },
+                        "departure": {
+                            "time": "1733111184"
+                        },
+                        "stopId": "S11S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111364"
+                        },
+                        "departure": {
+                            "time": "1733111364"
+                        },
+                        "stopId": "S09S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "000006SI",
+            "vehicle": {
+                "trip": {
+                    "tripId": "132600_SI..S",
+                    "startTime": "22:06:30",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "currentStopSequence": 12,
+                "currentStatus": "STOPPED_AT",
+                "timestamp": "1733110349",
+                "stopId": "S19S"
+            }
+        },
+        {
+            "id": "000007SI",
+            "tripUpdate": {
+                "trip": {
+                    "tripId": "135600_SI..S",
+                    "startTime": "22:36:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "stopTimeUpdate": [
+                    {
+                        "arrival": {
+                            "time": "1733110560"
+                        },
+                        "departure": {
+                            "time": "1733110560"
+                        },
+                        "stopId": "S31S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110740"
+                        },
+                        "departure": {
+                            "time": "1733110740"
+                        },
+                        "stopId": "S30S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110860"
+                        },
+                        "departure": {
+                            "time": "1733110860"
+                        },
+                        "stopId": "S29S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733110980"
+                        },
+                        "departure": {
+                            "time": "1733110980"
+                        },
+                        "stopId": "S28S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111160"
+                        },
+                        "departure": {
+                            "time": "1733111160"
+                        },
+                        "stopId": "S27S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111280"
+                        },
+                        "departure": {
+                            "time": "1733111280"
+                        },
+                        "stopId": "S26S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111400"
+                        },
+                        "departure": {
+                            "time": "1733111400"
+                        },
+                        "stopId": "S25S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111520"
+                        },
+                        "departure": {
+                            "time": "1733111520"
+                        },
+                        "stopId": "S24S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111580"
+                        },
+                        "departure": {
+                            "time": "1733111580"
+                        },
+                        "stopId": "S23S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111700"
+                        },
+                        "departure": {
+                            "time": "1733111700"
+                        },
+                        "stopId": "S22S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111820"
+                        },
+                        "departure": {
+                            "time": "1733111820"
+                        },
+                        "stopId": "S21S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733111940"
+                        },
+                        "departure": {
+                            "time": "1733111940"
+                        },
+                        "stopId": "S20S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112060"
+                        },
+                        "departure": {
+                            "time": "1733112060"
+                        },
+                        "stopId": "S19S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112180"
+                        },
+                        "departure": {
+                            "time": "1733112180"
+                        },
+                        "stopId": "S18S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112300"
+                        },
+                        "departure": {
+                            "time": "1733112300"
+                        },
+                        "stopId": "S17S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112420"
+                        },
+                        "departure": {
+                            "time": "1733112420"
+                        },
+                        "stopId": "S16S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112540"
+                        },
+                        "departure": {
+                            "time": "1733112540"
+                        },
+                        "stopId": "S15S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112660"
+                        },
+                        "departure": {
+                            "time": "1733112660"
+                        },
+                        "stopId": "S14S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112780"
+                        },
+                        "departure": {
+                            "time": "1733112780"
+                        },
+                        "stopId": "S13S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112900"
+                        },
+                        "departure": {
+                            "time": "1733112900"
+                        },
+                        "stopId": "S11S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113080"
+                        },
+                        "departure": {
+                            "time": "1733113080"
+                        },
+                        "stopId": "S09S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "000008SI",
+            "vehicle": {
+                "trip": {
+                    "tripId": "135600_SI..S",
+                    "startTime": "22:36:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "timestamp": "1733110560",
+                "stopId": "S31S"
+            }
+        },
+        {
+            "id": "000009SI",
+            "tripUpdate": {
+                "trip": {
+                    "tripId": "138100_SI..N",
+                    "startTime": "23:01:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "stopTimeUpdate": [
+                    {
+                        "arrival": {
+                            "time": "1733112060"
+                        },
+                        "departure": {
+                            "time": "1733112060"
+                        },
+                        "stopId": "S09N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112240"
+                        },
+                        "departure": {
+                            "time": "1733112240"
+                        },
+                        "stopId": "S11N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112360"
+                        },
+                        "departure": {
+                            "time": "1733112360"
+                        },
+                        "stopId": "S13N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112480"
+                        },
+                        "departure": {
+                            "time": "1733112480"
+                        },
+                        "stopId": "S14N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112600"
+                        },
+                        "departure": {
+                            "time": "1733112600"
+                        },
+                        "stopId": "S15N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112720"
+                        },
+                        "departure": {
+                            "time": "1733112720"
+                        },
+                        "stopId": "S16N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112840"
+                        },
+                        "departure": {
+                            "time": "1733112840"
+                        },
+                        "stopId": "S17N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112960"
+                        },
+                        "departure": {
+                            "time": "1733112960"
+                        },
+                        "stopId": "S18N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113080"
+                        },
+                        "departure": {
+                            "time": "1733113080"
+                        },
+                        "stopId": "S19N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113200"
+                        },
+                        "departure": {
+                            "time": "1733113200"
+                        },
+                        "stopId": "S20N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113320"
+                        },
+                        "departure": {
+                            "time": "1733113320"
+                        },
+                        "stopId": "S21N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113440"
+                        },
+                        "departure": {
+                            "time": "1733113440"
+                        },
+                        "stopId": "S22N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113560"
+                        },
+                        "departure": {
+                            "time": "1733113560"
+                        },
+                        "stopId": "S23N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113620"
+                        },
+                        "departure": {
+                            "time": "1733113620"
+                        },
+                        "stopId": "S24N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113740"
+                        },
+                        "departure": {
+                            "time": "1733113740"
+                        },
+                        "stopId": "S25N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113860"
+                        },
+                        "departure": {
+                            "time": "1733113860"
+                        },
+                        "stopId": "S26N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113980"
+                        },
+                        "departure": {
+                            "time": "1733113980"
+                        },
+                        "stopId": "S27N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114160"
+                        },
+                        "departure": {
+                            "time": "1733114160"
+                        },
+                        "stopId": "S28N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114280"
+                        },
+                        "departure": {
+                            "time": "1733114280"
+                        },
+                        "stopId": "S29N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114400"
+                        },
+                        "departure": {
+                            "time": "1733114400"
+                        },
+                        "stopId": "S30N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114580"
+                        },
+                        "departure": {
+                            "time": "1733114580"
+                        },
+                        "stopId": "S31N",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "000010SI",
+            "vehicle": {
+                "trip": {
+                    "tripId": "138100_SI..N",
+                    "startTime": "23:01:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "timestamp": "1733112060",
+                "stopId": "S09N"
+            }
+        },
+        {
+            "id": "000011SI",
+            "tripUpdate": {
+                "trip": {
+                    "tripId": "138600_SI..S",
+                    "startTime": "23:06:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "stopTimeUpdate": [
+                    {
+                        "arrival": {
+                            "time": "1733112360"
+                        },
+                        "departure": {
+                            "time": "1733112360"
+                        },
+                        "stopId": "S31S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112540"
+                        },
+                        "departure": {
+                            "time": "1733112540"
+                        },
+                        "stopId": "S30S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112660"
+                        },
+                        "departure": {
+                            "time": "1733112660"
+                        },
+                        "stopId": "S29S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112780"
+                        },
+                        "departure": {
+                            "time": "1733112780"
+                        },
+                        "stopId": "S28S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733112960"
+                        },
+                        "departure": {
+                            "time": "1733112960"
+                        },
+                        "stopId": "S27S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113080"
+                        },
+                        "departure": {
+                            "time": "1733113080"
+                        },
+                        "stopId": "S26S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113200"
+                        },
+                        "departure": {
+                            "time": "1733113200"
+                        },
+                        "stopId": "S25S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113320"
+                        },
+                        "departure": {
+                            "time": "1733113320"
+                        },
+                        "stopId": "S24S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113380"
+                        },
+                        "departure": {
+                            "time": "1733113380"
+                        },
+                        "stopId": "S23S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113500"
+                        },
+                        "departure": {
+                            "time": "1733113500"
+                        },
+                        "stopId": "S22S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113620"
+                        },
+                        "departure": {
+                            "time": "1733113620"
+                        },
+                        "stopId": "S21S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113740"
+                        },
+                        "departure": {
+                            "time": "1733113740"
+                        },
+                        "stopId": "S20S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113860"
+                        },
+                        "departure": {
+                            "time": "1733113860"
+                        },
+                        "stopId": "S19S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733113980"
+                        },
+                        "departure": {
+                            "time": "1733113980"
+                        },
+                        "stopId": "S18S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114100"
+                        },
+                        "departure": {
+                            "time": "1733114100"
+                        },
+                        "stopId": "S17S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114220"
+                        },
+                        "departure": {
+                            "time": "1733114220"
+                        },
+                        "stopId": "S16S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114340"
+                        },
+                        "departure": {
+                            "time": "1733114340"
+                        },
+                        "stopId": "S15S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114460"
+                        },
+                        "departure": {
+                            "time": "1733114460"
+                        },
+                        "stopId": "S14S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114580"
+                        },
+                        "departure": {
+                            "time": "1733114580"
+                        },
+                        "stopId": "S13S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114700"
+                        },
+                        "departure": {
+                            "time": "1733114700"
+                        },
+                        "stopId": "S11S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    },
+                    {
+                        "arrival": {
+                            "time": "1733114880"
+                        },
+                        "departure": {
+                            "time": "1733114880"
+                        },
+                        "stopId": "S09S",
+                        "departureOccupancyStatus": "NO_DATA_AVAILABLE"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "000012SI",
+            "vehicle": {
+                "trip": {
+                    "tripId": "138600_SI..S",
+                    "startTime": "23:06:00",
+                    "startDate": "20241201",
+                    "routeId": "SI"
+                },
+                "timestamp": "1733112360",
+                "stopId": "S31S"
+            }
+        }
+    ]
+}

@@ -156,8 +156,8 @@ WHERE NOT EXISTS (
     )
 );
 
--- Done: A correlated nested query using NOT EXISTS and EXCEPT
--- Selects metro routes that have incidents and planned kilometerage data for every day of the week (Monday to Sunday).
+-- Task: A correlated nested query using NOT EXISTS and EXCEPT
+-- Done: Selects metro routes that have incidents and planned kilometerage data for every day of the week (Monday to Sunday).
 SELECT m.stm_metro_route_id
 FROM stm_metro_route m
 WHERE NOT EXISTS (

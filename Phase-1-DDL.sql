@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS stm_route(
 CREATE TABLE IF NOT EXISTS stm_metro_route(
     stm_metro_route_id INT PRIMARY KEY,
     stm_metro_route_colour metro_colour NOT NULL,
-    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_route(stm_route_id)
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_route(stm_route_id) ON DELETE CASCADE
 );
 
 -- The stm_bus_route table represents a stm_bus_route entity
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS stm_metro_route(
 CREATE TABLE IF NOT EXISTS stm_bus_route(
     stm_bus_route_id INT PRIMARY KEY,
     stm_route_name VARCHAR(255) NOT NULL,
-    FOREIGN KEY (stm_bus_route_id) REFERENCES stm_route(stm_route_id)
+    FOREIGN KEY (stm_bus_route_id) REFERENCES stm_route(stm_route_id) ON DELETE CASCADE
 );
 
 -- The stm_metro_trip table represents a stm_metro_trip entity
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS stm_metro_trip(
     stm_metro_trip_service_id VARCHAR(255) NOT NULL,
     stm_metro_trip_headsign VARCHAR(255) NOT NULL,
     stm_metro_trip_direction_id INT NOT NULL CHECK (stm_metro_trip_direction_id = 0 OR stm_metro_trip_direction_id = 1),
-    FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+    FOREIGN KEY (stm_metro_trip_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
 );
 
 -- The stm_bus_trip table represents a stm_bus_trip entity
@@ -57,14 +57,14 @@ CREATE TABLE IF NOT EXISTS stm_bus_trip(
     stm_bus_trip_service_id VARCHAR(255) NOT NULL,
     stm_bus_trip_headsign VARCHAR(255) NOT NULL,
     stm_bus_trip_direction_id INT NOT NULL CHECK (stm_bus_trip_direction_id = 0 OR stm_bus_trip_direction_id = 1),
-    FOREIGN KEY (stm_bus_trip_route_id) REFERENCES stm_bus_route(stm_bus_route_id)
+    FOREIGN KEY (stm_bus_trip_route_id) REFERENCES stm_bus_route(stm_bus_route_id) ON DELETE CASCADE
 );
 
 -- The stm_bus_stop table represents a stm_bus_stop entity
 -- A stm_bus_stop entity is a representation of a physical bus stop
 -- This table is populated with the content of the stops.txt files from the publically available STM gtfs information
 CREATE TABLE IF NOT EXISTS stm_bus_stop(
-    stm_bus_stop_id VARCHAR(15) PRIMARY KEY,
+    stm_bus_stop_id INT PRIMARY KEY,
     stm_bus_stop_name VARCHAR(255) NOT NULL,
     stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
     stm_bus_stop_location_type VARCHAR(255) NOT NULL,
@@ -98,8 +98,8 @@ CREATE TABLE IF NOT EXISTS stm_metro_stop_time(
     stm_metro_stop_time_stop_sequence INT NOT NULL,
     stm_metro_stop_arrival_time TIME NOT NULL,
     stm_metro_stop_departure_time TIME NOT NULL,
-    FOREIGN KEY (stm_metro_stop_time_trip_id) REFERENCES stm_metro_trip(stm_metro_trip_id),
-    FOREIGN KEY (stm_metro_stop_time_stop_id) REFERENCES stm_metro_stop(stm_metro_stop_id)
+    FOREIGN KEY (stm_metro_stop_time_trip_id) REFERENCES stm_metro_trip(stm_metro_trip_id) ON DELETE CASCADE,
+    FOREIGN KEY (stm_metro_stop_time_stop_id) REFERENCES stm_metro_stop(stm_metro_stop_id) ON DELETE CASCADE
 );
 
 -- The stm_bus_stop_time table represents a relationship between stm_bus_trip and stm_bus_stop
@@ -109,12 +109,12 @@ CREATE TABLE IF NOT EXISTS stm_metro_stop_time(
 CREATE TABLE IF NOT EXISTS stm_bus_stop_time(
     stm_bus_stop_time_id INT PRIMARY KEY,
     stm_bus_stop_time_trip_id INT NOT NULL,
-    stm_bus_stop_time_stop_id VARCHAR(15) NOT NULL,
+    stm_bus_stop_time_stop_id INT NOT NULL,
     stm_bus_stop_time_stop_sequence INT NOT NULL,
     stm_bus_stop_arrival_time TIME NOT NULL,
     stm_bus_stop_departure_time TIME NOT NULL,
-    FOREIGN KEY (stm_bus_stop_time_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id),
-    FOREIGN KEY (stm_bus_stop_time_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
+    FOREIGN KEY (stm_bus_stop_time_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id) ON DELETE CASCADE,
+    FOREIGN KEY (stm_bus_stop_time_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
 );
 
 -- The stm_bus_stop_cancelled_moved_relocated table represents a stm_bus_stop_cancelled_moved_relocated entity
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS stm_bus_stop_time(
 -- This table is populated with the content of the etatservice (v2) API provided publicly by the STM
 CREATE TABLE IF NOT EXISTS stm_bus_stop_cancelled_moved_relocated(
     stm_bus_stop_cancelled_moved_relocated_id INT PRIMARY KEY,
-    stm_bus_stop_id VARCHAR(15) NOT NULL,
+    stm_bus_stop_id INT NOT NULL,
     stm_bus_stop_code INT NOT NULL CHECK (stm_bus_stop_code > 0),
     stm_bus_stop_cancelled_moved_relocated_date DATE NOT NULL,
     stm_bus_stop_cancelled_moved_relocated_reason TEXT NOT NULL,
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS stm_metro_planned_kilometerage (
     planned_kilometerage planned_kilometerage NOT NULL,
     day_of_week day_of_week NOT NULL,
     stm_metro_planned_kilometerage_date DATE NOT NULL,
-    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
 );
 
 -- The stm_metro_realized_kilometerage table represents a stm_metro_realized_kilometerage entity
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS stm_metro_realized_kilometerage (
     realized_kilometerage realized_kilometerage NOT NULL,
     day_of_week_or_type_of_day VARCHAR(25) NOT NULL,
     stm_metro_realized_kilometerage_date DATE NOT NULL,
-    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
 );
 
 -- The stm_incident table represents a stm_incident entity
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS stm_incident(
     stm_incident_date_of_incident DATE NOT NULL,
     stm_incident_location_of_incident VARCHAR(255) NOT NULL,
     stm_metro_route_id INT NOT NULL,
-    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id)
+    FOREIGN KEY (stm_metro_route_id) REFERENCES stm_metro_route(stm_metro_route_id) ON DELETE CASCADE
 );
 
 -- The live_stm_bus_trip table represents a live_stm_bus_trip entity
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS live_stm_bus_trip(
     live_stm_bus_trip_id INT PRIMARY KEY,
     stm_bus_trip_id INT NOT NULL,
     live_stm_bus_trip_date TIMESTAMP NOT NULL,
-    FOREIGN KEY (stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id)
+    FOREIGN KEY (stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id) ON DELETE CASCADE
 );
 
 -- The live_stm_bus_trip table represents a live_stm_bus_trip_stop entity
@@ -187,14 +187,14 @@ CREATE TABLE IF NOT EXISTS live_stm_bus_trip(
 CREATE TABLE IF NOT EXISTS live_stm_bus_trip_stop(
     live_stm_bus_trip_stop_id INT,
     live_stm_bus_trip_id INT NOT NULL,
-    stm_bus_stop_id VARCHAR(15) NOT NULL,
+    stm_bus_stop_id INT NOT NULL,
     live_stm_bus_stop_arrival_time TIMESTAMP NOT NULL,
     live_stm_bus_stop_departure_time TIMESTAMP NOT NULL,
     live_stm_bus_trip_stop_sequence INT NOT NULL,
     live_stm_bus_trip_stop_schedule_relationship VARCHAR(255),
     PRIMARY KEY (live_stm_bus_trip_stop_id, live_stm_bus_trip_id, stm_bus_stop_id, live_stm_bus_stop_arrival_time),
-    FOREIGN KEY (live_stm_bus_trip_id) REFERENCES live_stm_bus_trip(live_stm_bus_trip_id),
-    FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id)
+    FOREIGN KEY (live_stm_bus_trip_id) REFERENCES stm_bus_trip(stm_bus_trip_id) ON DELETE CASCADE,
+    FOREIGN KEY (stm_bus_stop_id) REFERENCES stm_bus_stop(stm_bus_stop_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS mta_metro_route(
@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS mta_metro_stop(
     mta_metro_stop_longitude DECIMAL(9, 6) NOT NULL,
     mta_metro_stop_location_type VARCHAR(255) NOT NULL,
     mta_metro_parent_stop VARCHAR(15),
-    FOREIGN KEY (mta_metro_parent_stop) REFERENCES mta_metro_stop(mta_metro_stop_id)
+    FOREIGN KEY (mta_metro_parent_stop) REFERENCES mta_metro_stop(mta_metro_stop_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS mta_metro_trip(
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS mta_metro_trip(
     mta_metro_service_id VARCHAR(255) NOT NULL,
     mta_metro_trip_headsign VARCHAR(255) NOT NULL,
     mta_metro_direction_id INT NOT NULL,
-    FOREIGN KEY (mta_metro_route_id) REFERENCES mta_metro_route(mta_metro_route_id)
+    FOREIGN KEY (mta_metro_route_id) REFERENCES mta_metro_route(mta_metro_route_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS mta_metro_stop_time(
@@ -231,8 +231,8 @@ CREATE TABLE IF NOT EXISTS mta_metro_stop_time(
     mta_metro_stop_time_stop_sequence INT NOT NULL,
     mta_metro_stop_arrival_time TIME NOT NULL,
     mta_metro_stop_departure_time TIME NOT NULL,
-    FOREIGN KEY (mta_metro_stop_time_trip_id) REFERENCES mta_metro_trip(mta_metro_trip_id),
-    FOREIGN KEY (mta_metro_stop_time_stop_id) REFERENCES mta_metro_stop(mta_metro_stop_id)
+    FOREIGN KEY (mta_metro_stop_time_trip_id) REFERENCES mta_metro_trip(mta_metro_trip_id) ON DELETE CASCADE,
+    FOREIGN KEY (mta_metro_stop_time_stop_id) REFERENCES mta_metro_stop(mta_metro_stop_id) ON DELETE CASCADE
 );
 
 -- View for a low key access to the stm_incident table, only showing incidents from the last year
