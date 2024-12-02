@@ -37,5 +37,5 @@ The project requires the following dependencies:
 [Docs Link](https://docs.google.com/document/d/1iI6DHH9BiiiCHJ30YzzL8wDj_BObIsEIM19i_BdAHso/edit?usp=sharing)
 
 ## Slides Presentation
-[Canva Link]
+[Canva Link](https://drive.google.com/file/d/1aQMF_u0o4uyx1dbrHyfzhERl8ji97Icv/view?usp=sharing)
 
