@@ -7,11 +7,10 @@ Team members:
 - [Midhurshaan Nadarajah](https://github.com/midhurshaan)
 
 ## Topic
-Comparing and contrasting analytics with Montréal, Toronto and New York City's public transit systems. 
+Comparing and contrasting Montréal and New York City's public transit systems. 
 
 ## Overview
-
-This project fetches data from the STM (Montréal public transit), TTC (Toronto pubic transit), and MTA (New York City public transit) API and stores it. The data includes service status messages, route information and  and trip updates. The fetched data is saved as JSON files for further analysis or usage.
+This project fetches data from the STM (Montréal public transit system) and MTA (New York City public transit system) API and stores it. The data includes service status messages, route information and trip updates. The fetched data is saved as JSON files for further analysis or usage.
 
 ## APIs used
 - [STM](https://www.stm.info/en/about/developers)
@@ -22,16 +21,15 @@ This project fetches data from the STM (Montréal public transit), TTC (Toronto 
 ## Features
 - Fetches service status messages and trip updates from the STM API.
 - Parses Protobuf data from the STM API trip updates and converts it to JSON.
-- Saves the fetched data as JSON files. [To be changed]
+- Saves the fetched data as JSON files.
 
 ## Dependencies
-
 The project requires the following dependencies:
-
 - `requests`: For making HTTP requests to the STM API.
 - `psycopg2`: For connecting to a PostgreSQL database.
 - `protobuf`: For parsing Protobuf data.
 - `google.protobuf.json_format`: For converting Protobuf messages to JSON.
+- `neo4j`: For connecting to a Neo4j database.
 
 ## Report
 [Docs Link](https://docs.google.com/document/d/1iI6DHH9BiiiCHJ30YzzL8wDj_BObIsEIM19i_BdAHso/edit?usp=sharing)
